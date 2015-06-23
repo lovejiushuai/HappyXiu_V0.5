@@ -19,6 +19,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	::CoUninitialize();	//退出com库
 }
 
 void CMainFrame::OnFinalRelease()
@@ -64,32 +65,36 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  Add your specialized creation code here
 
-	
-	//if(!AfxOleInit())//这就是初始化COM库
-	//{
-	//	AfxMessageBox(_T("KE初始化出错!"));
-	//}
+		
 
-	//CoInitialize(NULL);
-	//HRESULT hr;
-	//try                            //连接数据库
-	//{
-	//	hr = m_pConnection.CreateInstance(__uuidof(Connection)/*"ADODB.Connection"*/);
-	//	if(SUCCEEDED(hr))
-	//	{
-	//		m_pConnection->ConnectionTimeout = 10;	//连接超时
-	//		m_pConnection->CursorLocation = adUseClient;//作用于记录集指针，非常重要!!!
-	//		m_pConnection->ConnectionString = "File Name=HappyXiu.udl";
-	//		m_pConnection->Open("","","",-1);
-	//	}
-	//}
-	//catch(_com_error e)
-	//{
-	//	CString str;
-	//	str.Format(_T("连接数据库失败:%s"),e.ErrorMessage());
-	//	::MessageBox(NULL,str,_T("提示信息"),NULL);
-	//	//return false;
-	//}
+#if _WIN32_WINNT > 0x500
+	//保留字（必须为null） ，加载方式 COINIT_MULTITHREADED多线程的方式加载
+	// 以多线程方式打开com通道
+	::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+#else
+	::CoInitialize(NULL);
+#endif
+
+	/*CoInitialize(NULL);*/
+	HRESULT hr;
+	try                            //连接数据库
+	{
+		hr = theApp.m_pConnection.CreateInstance(__uuidof(Connection)/*"ADODB.Connection"*/);
+		if(SUCCEEDED(hr))
+		{
+			theApp.m_pConnection->ConnectionTimeout = 10;	//连接超时
+			theApp.m_pConnection->CursorLocation = adUseClient;//作用于记录集指针，非常重要!!!
+			theApp.m_pConnection->ConnectionString = "File Name=HappyXiu.udl";
+			theApp.m_pConnection->Open("","","",-1);
+		}
+	}
+	catch(_com_error e)
+	{
+		CString str;
+		str.Format(_T("连接数据库失败:%s"),e.ErrorMessage());
+		::MessageBox(NULL,str,_T("提示信息"),NULL);
+		//return false;
+	}
 	
 
 
@@ -264,11 +269,18 @@ void CMainFrame::OnDestroy()
 
 	//关闭记录集和连接
 
-	/*if(m_pRecordset!=NULL)
+	/*if(theApp.m_pRecordset!=NULL)
+	{
+		theApp.m_pRecordset->Close();
+		theApp.m_pRecordset.Release();
+	}
 
-		m_pRecordset->Close();
+	if (theApp.m_pConnection !=NULL )
+	{
+		theApp.m_pConnection->Close();
+		theApp.m_pConnection.Release();
+	}*/
+	
 
-	m_pConnection->Close();
-
-	CoUninitialize();*/	//退出com库
+	//CoUninitialize();	//退出com库
 }

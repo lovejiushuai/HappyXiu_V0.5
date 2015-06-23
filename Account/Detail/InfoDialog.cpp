@@ -138,33 +138,33 @@ BOOL CInfoDialog::OnInitDialog()
 
 void CInfoDialog::OnInitADOConn()
 {
-	if(!AfxOleInit())//这就是初始化COM库
-	{
-		AfxMessageBox(_T("KE初始化出错!"));
-	}
+	//if(!AfxOleInit())//这就是初始化COM库
+	//{
+	//	AfxMessageBox(_T("KE初始化出错!"));
+	//}
 
-	CoInitialize(NULL);
-	HRESULT hr;
-	try                            //连接数据库
-	{
-		hr = m_pConnection.CreateInstance(__uuidof(Connection)/*"ADODB.Connection"*/);
-		if(SUCCEEDED(hr))
-		{
-			m_pConnection->ConnectionTimeout = 10;	//连接超时
-			m_pConnection->CursorLocation = adUseClient;//作用于记录集指针，非常重要!!!
-			m_pConnection->ConnectionString = "File Name=happyXiu.udl";
-			m_pConnection->Open("","","",-1);
-		}
-	}
-	catch(_com_error e)
-	{
-		CString str;
-		str.Format(_T("连接数据库失败:%s"),e.ErrorMessage());
-		::MessageBox(NULL,str,_T("提示信息"),NULL);
-		//return false;
-	}
-
+	//CoInitialize(NULL);
+	//HRESULT hr;
+	//try                            //连接数据库
+	//{
+	//	hr = m_pConnection.CreateInstance(__uuidof(Connection)/*"ADODB.Connection"*/);
+	//	if(SUCCEEDED(hr))
+	//	{
+	//		m_pConnection->ConnectionTimeout = 10;	//连接超时
+	//		m_pConnection->CursorLocation = adUseClient;//作用于记录集指针，非常重要!!!
+	//		m_pConnection->ConnectionString = "File Name=happyXiu.udl";
+	//		m_pConnection->Open("","","",-1);
+	//	}
+	//}
+	//catch(_com_error e)
+	//{
+	//	CString str;
+	//	str.Format(_T("连接数据库失败:%s"),e.ErrorMessage());
+	//	::MessageBox(NULL,str,_T("提示信息"),NULL);
+	//	//return false;
+	//}
 }
+
 void CInfoDialog::ExitConnect()
 {
 	//关闭记录集和连接
@@ -174,13 +174,13 @@ void CInfoDialog::ExitConnect()
 
 	if(m_pConnection!=NULL)
 	m_pConnection->Close();*/
-	CoUninitialize();	//退出com库
+	//CoUninitialize();	//退出com库
 }
 
 void CInfoDialog::AddToGrid()
 {
 	//连接数据库
-	OnInitADOConn();
+	/*OnInitADOConn();*/
 
 	m_list.InsertColumn(0,_T("编号"),LVCFMT_LEFT,50,0);
 	m_list.InsertColumn(1,_T("模块"),LVCFMT_LEFT,80,1);
@@ -199,9 +199,9 @@ void CInfoDialog::AddToGrid()
 	try
 	{
 		sql=_T("select * from main");			//按学号和课程号升序排序
-		m_pRecordset=m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		theApp.m_pRecordset=theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		_variant_t var;
-		while(!m_pRecordset->adoEOF)
+		while(!theApp.m_pRecordset->adoEOF)
 		{
 			dataID.Empty();
 			boardName.Empty();
@@ -212,7 +212,7 @@ void CInfoDialog::AddToGrid()
 			slotNum.Empty();
 			timeSlot.Empty();
 
-			var = m_pRecordset->GetCollect("dataID");
+			var = theApp.m_pRecordset->GetCollect("dataID");
 			if(var.vt != VT_NULL)
 			{
 				dataID = (char*)(_bstr_t)var;
@@ -224,7 +224,7 @@ void CInfoDialog::AddToGrid()
 				m_list.InsertItem(index,dataID);
 			}
 
-			var = m_pRecordset->GetCollect("moduleNum");
+			var = theApp.m_pRecordset->GetCollect("moduleNum");
 			if(var.vt != VT_NULL)
 			{
 				moduleNum = (char*)(_bstr_t)var;
@@ -236,7 +236,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,1,moduleNum);
 			}
 
-			var = m_pRecordset->GetCollect("slotNum");			
+			var =theApp. m_pRecordset->GetCollect("slotNum");			
 			if(var.vt != VT_NULL)
 			{				
 				slotNum = (char*)(_bstr_t)var;
@@ -248,7 +248,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,4,portNum);
 			}
 			
-			var = m_pRecordset->GetCollect("boardName");			
+			var = theApp.m_pRecordset->GetCollect("boardName");			
 			if(var.vt != VT_NULL)
 			{				
 				boardName = (char*)(_bstr_t)var;
@@ -260,7 +260,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,3,boardName);
 			}
 
-			var = m_pRecordset->GetCollect("portNum");			
+			var = theApp.m_pRecordset->GetCollect("portNum");			
 			if(var.vt != VT_NULL)
 			{				
 				portNum = (char*)(_bstr_t)var;
@@ -272,7 +272,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,4,portNum);
 			}
 
-			var= m_pRecordset->GetCollect("timeSlot");
+			var= theApp.m_pRecordset->GetCollect("timeSlot");
 			if(var.vt != VT_NULL)
 			{				
 				timeSlot = (char*)(_bstr_t)var;
@@ -284,7 +284,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,5,timeSlot);
 			}
 
-			var= m_pRecordset->GetCollect("deviceNum");
+			var= theApp.m_pRecordset->GetCollect("deviceNum");
 			if(var.vt != VT_NULL)
 			{
 				deviceNum = (char*)(_bstr_t)var;
@@ -296,7 +296,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,6,timeSlot);
 			}
 
-			var= m_pRecordset->GetCollect("portType");
+			var= theApp.m_pRecordset->GetCollect("portType");
 			if(var.vt != VT_NULL)
 			{				
 				portType = (char*)(_bstr_t)var;
@@ -308,7 +308,7 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,7,portType);
 			}
 
-			var= m_pRecordset->GetCollect("info");
+			var= theApp.m_pRecordset->GetCollect("info");
 			if(var.vt != VT_NULL)
 			{				
 				info = (char*)(_bstr_t)var;
@@ -354,7 +354,7 @@ void CInfoDialog::AddToGrid()
 			m_list.SetItemText( index, 8, info);
 			*/
 
-			m_pRecordset->MoveNext();
+			theApp.m_pRecordset->MoveNext();
 			index++;
 		}
 
@@ -364,8 +364,8 @@ void CInfoDialog::AddToGrid()
 		MessageBox(e.Description());
 	}
 	//断开数据库连接
-	ExitConnect();
-	CoUninitialize();	//退出com库
+	/*ExitConnect();
+	CoUninitialize();*/	//退出com库
 
 }
 

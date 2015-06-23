@@ -9,7 +9,7 @@
 
 #include "resource.h"		// main symbols
 
-
+#include "stdafx.h"
 // CDetailApp
 // See Detail.cpp for the implementation of this class
 //
@@ -24,6 +24,8 @@ public:
 	TCHAR m_strCurDir[MAX_PATH];
 	TCHAR m_exeFullPath[MAX_PATH];
 	CString m_status;
+	_ConnectionPtr m_pConnection;
+	_RecordsetPtr  m_pRecordset;
 // Overrides
 public:
 	virtual BOOL InitInstance();

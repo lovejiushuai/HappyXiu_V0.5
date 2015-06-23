@@ -21,8 +21,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 
-	_ConnectionPtr m_pConnection;
-	_RecordsetPtr  m_pRecordset;
+	/*_ConnectionPtr m_pConnection;
+	_RecordsetPtr  m_pRecordset;*/
 
 	virtual BOOL OnInitDialog();
 	void OnInitADOConn();

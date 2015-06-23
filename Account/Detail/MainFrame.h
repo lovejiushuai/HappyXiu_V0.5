@@ -35,7 +35,7 @@ protected:
 	CRightView *m_pRight;
 	CTabSplitterWnd m_wndSplitter;
 	CTreeCtrl m_wndTree;
-
+		
 	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 	afx_msg void OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult);
 

@@ -143,7 +143,7 @@ void CAccountDlg::LoadControl()
 
 	m_hMinButton.Create(_T("民和南"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 9*widthRect, topRect, 10*widthRect, topRect + heightRectS), this, IDC_BUTTON_MIN);
 
-	m_hMainButton_2.Create(_T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN2);
+	m_hMainButton_2.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN2);
 
 	m_hMainButton_1.EnableWindow(TRUE);
 	m_hLanZhouXiButton.EnableWindow(TRUE);
