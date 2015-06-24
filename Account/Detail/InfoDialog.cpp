@@ -13,15 +13,17 @@ IMPLEMENT_DYNAMIC(CInfoDialog, CDialog)
 
 CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CInfoDialog::IDD, pParent)
-{
+{	
 	dataID.Empty();
-	boardName.Empty();
-	deviceNum.Empty();
-	info.Empty();
 	moduleNum.Empty();
-	portNum, portType.Empty();
 	slotNum.Empty();
+	boardName.Empty();
+	portNum.Empty();
 	timeSlot.Empty();
+	deviceNum.Empty();	
+	portType.Empty();	
+	info.Empty();
+	m_containValue = 0;
 }
 
 CInfoDialog::~CInfoDialog()
@@ -32,35 +34,12 @@ void CInfoDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST, m_list);	
-	/*DDX_Text(pDX, IDC_BNAME, boardName);
-	DDX_Text(pDX, IDC_DEVICENUM, deviceNum);
-	DDX_Text(pDX, IDC_INFO, info);
-	DDX_Text(pDX, IDC_MODNUM, moduleNum);
-	DDX_Text(pDX, IDC_PORTNUM, portNum);
-	DDX_Text(pDX, IDC_PORTTYPE, portType);
-	DDX_Text(pDX, IDC_SLOTNUM, slotNum);
-	DDX_Text(pDX, IDC_TIMESLOT, timeSlot);*/
-	/*DDX_Control(pDX, IDC_BNAME, m_boardName);
-	DDX_Control(pDX, IDC_DEVICENUM, m_devNum);
-	DDX_Control(pDX, IDC_INFO, m_info);
-	DDX_Control(pDX, IDC_MODNUM, m_modNum);
-	DDX_Control(pDX, IDC_PORTNUM, m_portNum);
-	DDX_Control(pDX, IDC_PORTTYPE, m_portType);
-	DDX_Control(pDX, IDC_SLOTNUM, m_slotNum);
-	DDX_Control(pDX, IDC_TIMESLOT, m_timeSlot);*/
 }
 
 
 BEGIN_MESSAGE_MAP(CInfoDialog, CDialog)
-	/*ON_EN_CHANGE( IDC_BNAME, OnBoardName)
-	ON_EN_CHANGE( IDC_DEVICENUM, OnDeviceNum)
-	ON_EN_CHANGE( IDC_INFO, OnInfo)
-	ON_EN_CHANGE( IDC_MODNUM, OnModuleNum)
-	ON_EN_CHANGE( IDC_PORTNUM, OnPortNum)
-	ON_EN_CHANGE( IDC_PORTTYPE, OnPortType)
-	ON_EN_CHANGE( IDC_SLOTNUM, OnSlotNum)
-	ON_EN_CHANGE( IDC_TIMESLOT, OnTimeSlot)*/
 	ON_NOTIFY(NM_CLICK, IDC_LIST, OnClickList)
+	ON_BN_CLICKED( IDC_BUTTON_ADD, OnAddData)
 END_MESSAGE_MAP()
 
 
@@ -160,14 +139,14 @@ void CInfoDialog::LoadControl()
 	pDC->TextOutW(500,500,_T("TEXT"));
 	ReleaseDC(pDC);
 
-	m_modNum.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
-	m_slotNum.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.7 * screenheight, 0.45* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
-	m_boardName.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.7 * screenheight, 0.7* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
-	m_portNum.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.7 * screenheight, 0.95* screenwidth, 0.75 * screenheight), this, IDC_PORTNUM);
-	m_timeSlot.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.78 * screenheight, 0.2* screenwidth, 0.83 * screenheight), this, IDC_TIMESLOT);
-	m_devNum.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.78 * screenheight, 0.45* screenwidth, 0.83 * screenheight), this, IDC_DEVICENUM);
-	m_portType.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
-	m_info.Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.83 * screenheight), this, IDC_INFO);
+	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
+	m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.7 * screenheight, 0.45* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
+	m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.7 * screenheight, 0.7* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
+	m_portNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.7 * screenheight, 0.95* screenwidth, 0.75 * screenheight), this, IDC_PORTNUM);
+	m_timeSlot.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.78 * screenheight, 0.2* screenwidth, 0.83 * screenheight), this, IDC_TIMESLOT);
+	m_devNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.78 * screenheight, 0.45* screenwidth, 0.83 * screenheight), this, IDC_DEVICENUM);
+	m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
+	m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.83 * screenheight), this, IDC_INFO);
 
 	// 创建四个按键
 	m_addButton.Create( _T("添加"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 0.07 * screenwidth, 0.85 * screenheight, 0.22* screenwidth, 0.95 * screenheight), this, IDC_BUTTON_ADD);
@@ -241,11 +220,12 @@ void CInfoDialog::AddToGrid()
 
 	CString sql;
 	
-	int index=0;
+	m_containValue=0;
+	int index = 0;
 	try
 	{
 		sql=_T("select * from main");			//按学号和课程号升序排序
-		theApp.m_pRecordset=theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		_variant_t var;
 		while(!theApp.m_pRecordset->adoEOF)
 		{
@@ -366,10 +346,11 @@ void CInfoDialog::AddToGrid()
 				m_list.SetItemText(index,8,info);
 			}
 							
-
+			
 			theApp.m_pRecordset->MoveNext();
-			index++;
+			index ++;			
 		}
+		m_containValue = index;
 
 	}
 	catch(_com_error &e)
@@ -428,315 +409,188 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
-void CInfoDialog::OnModuleNum() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-	
-	// TODO: Add your control notification handler code here
+void CInfoDialog::OnAddData()
+{		
 	UpdateData();
-
-	if(boardName.IsEmpty())
+	getEditText();
+	if(moduleNum.IsEmpty()||moduleNum.IsEmpty()||slotNum.IsEmpty()||info.IsEmpty())
 	{
+		AfxMessageBox(_T("请把确认填写信息整!"),MB_ICONEXCLAMATION);
 		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
+	}	
+
+	CString sql,number;	
 	try
 	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
+		//sql.Format("insert into students(stuID,stuName,stuSex,teaID,comeFrom,comeYear,comeMonth,stuYear,stuMonth) \
+		//	values(%s,'%s','%s',%s,%s,%s,%s,%s,%s)",m_strNumber,m_strName,m_strSex,m_strTeacher,m_comeYear,m_comeMonth,\
+		//	m_stuYear,m_stuMonth);
+		/*sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"),+ m_containValue +",'"+moduleNum+"','"+slotNum+"',"+boardName+",'"+portNum+"',"+timeSlot+",\
+																																																												  "+deviceNum+","+portType+","+info+"')");*/
+		sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), dataID, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
+		theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		MessageBox(_T("录入成功."),_T("提示"));
+		sql.Format(_T("select * from main"));
+		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		DisplayInfo();
 	}
 	catch(_com_error &e)
 	{
-	MessageBox(e.Description());
-	}*/	
-
+		MessageBox(e.Description());
+	}
 }
-void CInfoDialog::OnSlotNum() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
 
-	// TODO: Add your control notification handler code here
-	UpdateData();
+void CInfoDialog::DisplayInfo()
+{
+	m_list.DeleteAllItems();
 	
-	if(boardName.IsEmpty())
+	m_containValue = 0;
+	int index = 0;
+	_variant_t var;
+	while(!theApp.m_pRecordset->adoEOF)
 	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
+		dataID.Empty();
+		boardName.Empty();
+		deviceNum.Empty();
+		info.Empty();
+		moduleNum.Empty();
+		portNum, portType.Empty();
+		slotNum.Empty();
+		timeSlot.Empty();
 
+		var = theApp.m_pRecordset->GetCollect("dataID");
+		if(var.vt != VT_NULL)
+		{
+			dataID = (char*)(_bstr_t)var;
+			m_list.InsertItem(index,dataID);
+
+		}
+		else
+		{
+			m_list.InsertItem(index,dataID);
+		}
+
+		var = theApp.m_pRecordset->GetCollect("moduleNum");
+		if(var.vt != VT_NULL)
+		{
+			moduleNum = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,1,moduleNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,1,moduleNum);
+		}
+
+		var =theApp. m_pRecordset->GetCollect("slotNum");			
+		if(var.vt != VT_NULL)
+		{				
+			slotNum = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,2,slotNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,4,portNum);
+		}
+
+		var = theApp.m_pRecordset->GetCollect("boardName");			
+		if(var.vt != VT_NULL)
+		{				
+			boardName = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,3,boardName);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,3,boardName);
+		}
+
+		var = theApp.m_pRecordset->GetCollect("portNum");			
+		if(var.vt != VT_NULL)
+		{				
+			portNum = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,4,portNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,4,portNum);
+		}
+
+		var= theApp.m_pRecordset->GetCollect("timeSlot");
+		if(var.vt != VT_NULL)
+		{				
+			timeSlot = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,5,timeSlot);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,5,timeSlot);
+		}
+
+		var= theApp.m_pRecordset->GetCollect("deviceNum");
+		if(var.vt != VT_NULL)
+		{
+			deviceNum = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,6,deviceNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,6,timeSlot);
+		}
+
+		var= theApp.m_pRecordset->GetCollect("portType");
+		if(var.vt != VT_NULL)
+		{				
+			portType = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,7,portType);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,7,portType);
+		}
+
+		var= theApp.m_pRecordset->GetCollect("info");
+		if(var.vt != VT_NULL)
+		{				
+			info = (char*)(_bstr_t)var;
+			m_list.SetItemText(index,8,info);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,8,info);
+		}
+
+
+		theApp.m_pRecordset->MoveNext();
+		index ++;			
+	}
+	m_containValue = index++;
 }
-void CInfoDialog::OnBoardName() 
+void CInfoDialog::getEditText()
 {
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
-
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
-}
-void CInfoDialog::OnPortNum() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
+	dataID.Format(_T("%d"), (m_containValue + 1));
 	
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
-}
-void CInfoDialog::OnTimeSlot() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
+	m_modNum.GetWindowText(moduleNum);
+	m_slotNum.GetWindowText(slotNum);
+	m_boardName.GetWindowText(boardName);
+	m_portNum.GetWindowText(portNum);
+	m_timeSlot.GetWindowText(timeSlot);
+	m_devNum.GetWindowText(deviceNum);
+	m_portType.GetWindowText(portType);
+	m_info.GetWindowText(info);
+	/*GetDlgItem(IDC_MODNUM)->GetWindowText(moduleNum);
+	GetDlgItem(IDC_SLOTNUM)->GetWindowText(slotNum);
+	GetDlgItem(IDC_BNAME)->GetWindowText(boardName);
+	GetDlgItem(IDC_PORTNUM)->GetWindowText(portNum);
+	GetDlgItem(IDC_TIMESLOT)->GetWindowText(timeSlot);
+	GetDlgItem(IDC_DEVICENUM)->GetWindowText(deviceNum);
+	GetDlgItem(IDC_PORTTYPE)->GetWindowText(portType);
+	GetDlgItem(IDC_INFO)->GetWindowText(info);*/
 	
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
-}
-void CInfoDialog::OnDeviceNum() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
-}
-void CInfoDialog::OnPortType() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
-}
-void CInfoDialog::OnInfo() 
-{
-	// TODO: If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	
-	if(boardName.IsEmpty())
-	{
-		return;
-	}
-	/*CString sql,sql2;
-	sql="select * from students,courses,choices where \
-	choices.stuID=students.stuID and choices.couID=courses.couID \
-	and choices.stuID="+m_stuID+" order by choices.couID";
-	sql2="select * from students where stuID="+m_stuID+"";
-	try
-	{
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql2,NULL,adCmdText);
-	if(m_rec->adoEOF)
-	{
-	m_stuName="无";
-	UpdateData(false);
-	return;
-	}
-	m_stuName=(char*)(_bstr_t)m_rec->GetCollect("stuName");
-	m_rec=theApp.m_conn->Execute((_bstr_t)sql,NULL,adCmdText);
-	DisplayInfo();
-	UpdateData(false);
-	}
-	catch(_com_error &e)
-	{
-	MessageBox(e.Description());
-	}*/	
-
 }

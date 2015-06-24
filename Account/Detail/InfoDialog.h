@@ -39,18 +39,21 @@ public:
 	afx_msg void OnPortType();	
 	afx_msg void OnInfo();
 	afx_msg void OnClickList(NMHDR* pNMHDR, LRESULT* pResult);
-
+	afx_msg void OnAddData();
+	void getEditText();
+	void DisplayInfo();
 	/*CListCtrl m_Grid;*/
 	CListCtrl m_list;
 	CString dataID;
-	CString boardName;
-	CString deviceNum;
-	CString info;
 	CString moduleNum;
-	CString portNum;
-	CString portType;
 	CString slotNum;
+	CString boardName;
+	CString portNum;
 	CString timeSlot;
+	CString deviceNum;
+	CString portType;
+	CString info;
+	int m_containValue;
 
 	CEdit m_boardName;
 	CEdit m_devNum;
