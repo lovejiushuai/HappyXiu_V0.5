@@ -84,7 +84,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		{
 			theApp.m_pConnection->ConnectionTimeout = 10;	//连接超时
 			theApp.m_pConnection->CursorLocation = adUseClient;//作用于记录集指针，非常重要!!!
-			theApp.m_pConnection->ConnectionString = "File Name=HappyXiu.udl";
+			theApp.m_pConnection->ConnectionString = _T("File Name=HappyXiu.udl");
 			theApp.m_pConnection->Open("","","",-1);
 		}
 	}
