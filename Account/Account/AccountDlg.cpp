@@ -69,8 +69,8 @@ BEGIN_MESSAGE_MAP(CAccountDlg, CDialogEx)
 	ON_BN_CLICKED( IDC_BUTTON_LANXID, OnButtonClickedLXD)
 	ON_BN_CLICKED( IDC_BUTTON_CHEN, OnButtonClickedC)
 	ON_BN_CLICKED( IDC_BUTTON_MIN, OnButtonClickedM)
-	ON_BN_CLICKED( IDC_BUTTON_MAIN1, OnButtonClickedMain)
-	ON_BN_CLICKED( IDC_BUTTON_MAIN2, OnButtonClickedMain)
+	ON_BN_CLICKED( IDC_BUTTON_MAIN, OnButtonClickedMain)
+	ON_BN_CLICKED( IDC_BUTTON_SPARE, OnButtonClickedSpare)
 	ON_MESSAGE(WM_START_DLL, LaunchDll)
 
 END_MESSAGE_MAP()
@@ -133,7 +133,7 @@ void CAccountDlg::LoadControl()
 
 	
 	// Create  button.
-	m_hMainButton_1.Create( _T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( widthRect, topRect, 2*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN1);
+	m_hMainButton.Create( _T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( widthRect, topRect, 2*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN);
 
 	m_hLanZhouXiButton.Create(_T("兰州西"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 3*widthRect, topRect, 4*widthRect, topRect + heightRectS), this, IDC_BUTTON_LANZHOUXI);
 
@@ -143,14 +143,14 @@ void CAccountDlg::LoadControl()
 
 	m_hMinButton.Create(_T("民和南"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 9*widthRect, topRect, 10*widthRect, topRect + heightRectS), this, IDC_BUTTON_MIN);
 
-	m_hMainButton_2.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN2);
+	m_hSpareButton.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect, topRect + heightRectL), this, IDC_BUTTON_SPARE);
 
-	m_hMainButton_1.EnableWindow(TRUE);
+	m_hMainButton.EnableWindow(TRUE);
 	m_hLanZhouXiButton.EnableWindow(TRUE);
 	m_hLanXiDButton.EnableWindow(TRUE);
 	m_hChenButton.EnableWindow(TRUE);
 	m_hMinButton.EnableWindow(TRUE);
-	m_hMainButton_2.EnableWindow(TRUE);
+	m_hSpareButton.EnableWindow(TRUE);
 
 	
 	lineY_1 = (topRect +  heightRectL/4);
@@ -298,6 +298,11 @@ HCURSOR CAccountDlg::OnQueryDragIcon()
 void CAccountDlg::OnButtonClickedMain()
 {
 	/*AfxMessageBox(_T("Main"));*/
+	PostMessage(WM_START_DLL, 0, 0);
+}
+void CAccountDlg::OnButtonClickedSpare()
+{
+	/*AfxMessageBox(_T("Spare"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
 

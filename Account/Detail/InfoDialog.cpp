@@ -77,14 +77,6 @@ BOOL CInfoDialog::OnInitDialog()
 	m_Grid.InsertColumn(7,_T("端口类型"),LVCFMT_LEFT,110,7);
 	m_Grid.InsertColumn(8,_T("描述"),LVCFMT_LEFT,200,8);*/
 
-	/*m_Grid.InsertColumn(0,_T("编号"),LVCFMT_LEFT,110,0);
-
-	m_Grid.InsertColumn(1,_T("姓名"),LVCFMT_LEFT,110,1);
-
-	m_Grid.InsertColumn(2,_T("性别"),LVCFMT_LEFT,110,2);
-
-	m_Grid.InsertColumn(3,_T("学历"),LVCFMT_LEFT,110,3);*/
-
 	AddToGrid();
 
 
@@ -319,40 +311,7 @@ void CInfoDialog::AddToGrid()
 			{
 				m_list.SetItemText(index,8,info);
 			}
-					
-
-			/*
-			dataID = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("dataID"));			
-			m_list.InsertItem(index,dataID);
-
-			moduleNum = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("moduleNum"));
-			m_list.SetItemText(index,1,moduleNum);
-
-			slotNum = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("slotNum"));
-			m_list.SetItemText( index, 2, slotNum);
-
-			boardName=(char*)(_bstr_t)m_pRecordset->GetCollect(_T("boardName"));
-			m_list.SetItemText(index,3,boardName);
-
-			portNum = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("portNum"));	
-			if (portNum.IsEmpty())
-			{
-			portNum.Format(_T(" "));
-			}
-			m_list.SetItemText(index,4,portNum);
-
-			timeSlot = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("timeSlot"));
-			m_list.SetItemText( index, 5, timeSlot);
-
-			deviceNum=(char*)(_bstr_t)m_pRecordset->GetCollect(_T("deviceNum"));
-			m_list.SetItemText(index,6,deviceNum);
-
-			portType = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("portType"));
-			m_list.SetItemText(index,7,portType);
-			
-			info = (char*)(_bstr_t)m_pRecordset->GetCollect(_T("info"));
-			m_list.SetItemText( index, 8, info);
-			*/
+							
 
 			theApp.m_pRecordset->MoveNext();
 			index++;

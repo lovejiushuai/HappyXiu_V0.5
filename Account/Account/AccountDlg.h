@@ -40,12 +40,12 @@ protected:
 	int m_buttonCount;
 	CRect m_rcPanel;
 
-	CButton m_hMainButton_1;
+	CButton m_hMainButton;
 	CButton m_hLanZhouXiButton;
 	CButton m_hLanXiDButton;
 	CButton m_hChenButton;
 	CButton m_hMinButton;
-	CButton m_hMainButton_2;
+	CButton m_hSpareButton;
 	int widthRect,heightRectL,heightRectS,topRect;
 	int lineY_1,lineY_2;
 
@@ -59,6 +59,7 @@ public:
 	afx_msg void OnButtonClickedC();
 	afx_msg void OnButtonClickedM();
 	afx_msg void OnButtonClickedMain();
+	afx_msg void OnButtonClickedSpare();
 	afx_msg LRESULT  LaunchDll(WPARAM wParam, LPARAM lParam);
 	CWinApp  *pDllEntryWinApp;
 
