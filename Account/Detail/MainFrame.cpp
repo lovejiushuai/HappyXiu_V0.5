@@ -96,7 +96,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		//return false;
 	}
 	
+	// 获取当前屏幕分辨率  -- 但不包括状态栏大小
+	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
 
+	CRect m_rcPanel;
+	//设置当前窗口大小  与 当前屏幕分辨率 一致
+	m_rcPanel.SetRect(0,0,screenwidth,screenheight);
+	MoveWindow(&m_rcPanel);
 
 
 	/////////////这一段代码创建树型控件////////////
@@ -232,12 +239,12 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 	if(str==_T("模 块  I"))
 	{
 		m_wndTree.GetFirstVisibleItem();
-		CInfoDialog *InStuInfoDlg=new CInfoDialog;
-		InStuInfoDlg->Create(IDD_INFODIALOG,this);
-		InStuInfoDlg->ShowWindow(SW_SHOW);	//显示非模态对话框
+		CInfoDialog *infoDialog = new CInfoDialog;
+		infoDialog->Create(IDD_INFODIALOG,this);
+		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 
 		//移动对话框的位置使其不重叠
-		InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
+		//InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
 
 	}
 	else if(str==_T("课程信息管理"))
