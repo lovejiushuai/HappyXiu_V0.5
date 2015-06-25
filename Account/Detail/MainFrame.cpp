@@ -291,3 +291,4 @@ void CMainFrame::OnDestroy()
 
 	//CoUninitialize();	//ÍË³öcom¿â
 }
+

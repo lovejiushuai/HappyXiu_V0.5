@@ -40,6 +40,10 @@ void CInfoDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CInfoDialog, CDialog)
 	ON_NOTIFY(NM_CLICK, IDC_LIST, OnClickList)
 	ON_BN_CLICKED( IDC_BUTTON_ADD, OnAddData)
+	ON_BN_CLICKED( IDC_BUTTON_MODIFY, OnModifyData)
+	ON_BN_CLICKED( IDC_BUTTON_DELETE, OnDeleteData)
+	ON_BN_CLICKED( IDC_BUTTON_CLEAR, OnClearData)
+	ON_MESSAGE(WM_UPDATALIST, UpdataList)
 END_MESSAGE_MAP()
 
 
@@ -54,52 +58,7 @@ BOOL CInfoDialog::OnInitDialog()
 
 	LoadControl();
 	AddToGrid();
-
-
-	/*OnInitADOConn();
-	m_list.InsertColumn(0,_T("研究生编号"),LVCFMT_CENTER,100,-1);
-	m_list.InsertColumn(1,_T("姓名"),LVCFMT_CENTER,80,-1);
-	m_list.InsertColumn(2,_T("课程编号"),LVCFMT_CENTER,80,-1);
-	m_list.InsertColumn(3,_T("课程名称"),LVCFMT_CENTER,100,-1);
-	m_list.InsertColumn(4,_T("时间"),LVCFMT_CENTER,100,-1);
-	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
-
-	CString sql,stuNum,couNum,stuName,couName,time;
-	int index=0;
-	try
-	{
-		sql=_T("select * from students,courses,choices where \
-			choices.stuID=students.stuID and choices.couID=courses.couID \
-			order by students.stuID,choices.couID asc");			//按学号和课程号升序排序
-		m_pRecordset=m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
-		while(!m_pRecordset->adoEOF)
-		{
-			stuNum=(char*)(_bstr_t)m_pRecordset->GetCollect("stuID");
-			m_list.InsertItem(index,stuNum);
-
-			stuName=(char*)(_bstr_t)m_pRecordset->GetCollect("stuName");
-			m_list.SetItemText(index,1,stuName);
-
-			couNum=(char*)(_bstr_t)m_pRecordset->GetCollect("couID");
-			m_list.SetItemText(index,2,couNum);
-
-			couName=(char*)(_bstr_t)m_pRecordset->GetCollect("couName");
-			m_list.SetItemText(index,3,couName);
-
-			time=(char*)(_bstr_t)m_pRecordset->GetCollect("time");
-			m_list.SetItemText(index,4,time);
-
-			m_pRecordset->MoveNext();
-			index++;
-		}
-
-	}
-	catch(_com_error &e)
-	{
-		MessageBox(e.Description());
-	}*/
-
-
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -135,18 +94,15 @@ void CInfoDialog::LoadControl()
 		pwnd = NULL;
 	}
 
-	CDC *pDC = GetDC();
-	pDC->TextOutW(500,500,_T("TEXT"));
-	ReleaseDC(pDC);
-
-	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
+	
+	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
 	m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.7 * screenheight, 0.45* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
 	m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.7 * screenheight, 0.7* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
 	m_portNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.7 * screenheight, 0.95* screenwidth, 0.75 * screenheight), this, IDC_PORTNUM);
 	m_timeSlot.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.78 * screenheight, 0.2* screenwidth, 0.83 * screenheight), this, IDC_TIMESLOT);
 	m_devNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.78 * screenheight, 0.45* screenwidth, 0.83 * screenheight), this, IDC_DEVICENUM);
-	m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
-	m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.83 * screenheight), this, IDC_INFO);
+	m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
+	m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.83 * screenheight), this, IDC_INFO);
 
 	// 创建四个按键
 	m_addButton.Create( _T("添加"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 0.07 * screenwidth, 0.85 * screenheight, 0.22* screenwidth, 0.95 * screenheight), this, IDC_BUTTON_ADD);
@@ -207,36 +163,43 @@ void CInfoDialog::AddToGrid()
 	//连接数据库
 	/*OnInitADOConn();*/
 
-	m_list.InsertColumn(0,_T("编号"),LVCFMT_LEFT,50,0);
-	m_list.InsertColumn(1,_T("模块"),LVCFMT_LEFT,80,1);
-	m_list.InsertColumn(2,_T("槽位"),LVCFMT_LEFT,50,2);
-	m_list.InsertColumn(3,_T("板名"),LVCFMT_LEFT,110,3);
-	m_list.InsertColumn(4,_T("端口号"),LVCFMT_LEFT,50,4);
-	m_list.InsertColumn(5,_T("使用时隙号"),LVCFMT_LEFT,110,5);
-	m_list.InsertColumn(6,_T("设备号"),LVCFMT_LEFT,110,6);
-	m_list.InsertColumn(7,_T("端口类型"),LVCFMT_LEFT,110,7);
-	m_list.InsertColumn(8,_T("描述"),LVCFMT_LEFT,200,8);
+	// 获取屏幕宽度
+	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+
+	//创建 列表 表头 每列名字 及 按照 屏幕分辨率设置大小
+	m_list.InsertColumn(0,_T("编号"),LVCFMT_LEFT,( 0.06 * screenwidth), 0);
+	m_list.InsertColumn(1,_T("模块"),LVCFMT_LEFT,( 0.09 * screenwidth),1);
+	m_list.InsertColumn(2,_T("槽位"),LVCFMT_LEFT,( 0.06 * screenwidth),2);
+	m_list.InsertColumn(3,_T("板名"),LVCFMT_LEFT,( 0.13 * screenwidth),3);
+	m_list.InsertColumn(4,_T("端口号"),LVCFMT_LEFT,( 0.06 * screenwidth),4);
+	m_list.InsertColumn(5,_T("使用时隙号"),LVCFMT_LEFT,( 0.1 * screenwidth),5);
+	m_list.InsertColumn(6,_T("设备号"),LVCFMT_LEFT,( 0.12 * screenwidth),6);
+	m_list.InsertColumn(7,_T("端口类型"),LVCFMT_LEFT,( 0.12 * screenwidth),7);
+	m_list.InsertColumn(8,_T("描述"),LVCFMT_LEFT,( 0.23 * screenwidth),8);
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
 
 	CString sql;
 	
 	m_containValue=0;
 	int index = 0;
+	int maxDataID = 0;
 	try
 	{
-		sql=_T("select * from main");			//按学号和课程号升序排序
+		//按模块、槽位、端口号和描述信息升序排序
+		sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		_variant_t var;
 		while(!theApp.m_pRecordset->adoEOF)
 		{
 			dataID.Empty();
-			boardName.Empty();
-			deviceNum.Empty();
-			info.Empty();
 			moduleNum.Empty();
-			portNum, portType.Empty();
 			slotNum.Empty();
+			boardName.Empty();
+			portNum.Empty();
 			timeSlot.Empty();
+			deviceNum.Empty();			
+			portType.Empty();
+			info.Empty();			
 
 			var = theApp.m_pRecordset->GetCollect("dataID");
 			if(var.vt != VT_NULL)
@@ -248,6 +211,13 @@ void CInfoDialog::AddToGrid()
 			else
 			{
 				m_list.InsertItem(index,dataID);
+			}
+
+
+			maxDataID = _ttoi(dataID);
+			if (m_containValue < maxDataID)
+			{
+				m_containValue = maxDataID;
 			}
 
 			var = theApp.m_pRecordset->GetCollect("moduleNum");
@@ -350,8 +320,6 @@ void CInfoDialog::AddToGrid()
 			theApp.m_pRecordset->MoveNext();
 			index ++;			
 		}
-		m_containValue = index;
-
 	}
 	catch(_com_error &e)
 	{
@@ -362,7 +330,6 @@ void CInfoDialog::AddToGrid()
 	CoUninitialize();*/	//退出com库
 
 }
-
 
 void CInfoDialog::OnCancel()
 {
@@ -381,6 +348,7 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	
 	dataID = m_list.GetItemText(mark,0);
+
 	moduleNum = m_list.GetItemText(mark,1);
 	m_modNum.SetWindowText(moduleNum);
 
@@ -405,19 +373,28 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 	info = m_list.GetItemText(mark,8);
 	m_info.SetWindowText(info);
 
+	//将数据在屏幕中对应控件中显示出来
 	UpdateData(false);
+
+
 	*pResult = 0;
 }
 
 void CInfoDialog::OnAddData()
-{		
-	UpdateData();
+{	
+	//用于将屏幕上控件中的数据交换到变量中
+	UpdateData(TRUE);
+
+
 	getEditText();
-	if(moduleNum.IsEmpty()||moduleNum.IsEmpty()||slotNum.IsEmpty()||info.IsEmpty())
+	if(moduleNum.IsEmpty() || slotNum.IsEmpty() || boardName.IsEmpty() || info.IsEmpty())
 	{
 		AfxMessageBox(_T("请把确认填写信息整!"),MB_ICONEXCLAMATION);
 		return;
 	}	
+
+
+	dataID.Format(_T("%d"), m_containValue + 1);
 
 	CString sql,number;	
 	try
@@ -427,10 +404,12 @@ void CInfoDialog::OnAddData()
 		//	m_stuYear,m_stuMonth);
 		/*sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"),+ m_containValue +",'"+moduleNum+"','"+slotNum+"',"+boardName+",'"+portNum+"',"+timeSlot+",\
 																																																												  "+deviceNum+","+portType+","+info+"')");*/
-		sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), dataID, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
+		sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), dataID, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
 		theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		MessageBox(_T("录入成功."),_T("提示"));
-		sql.Format(_T("select * from main"));
+
+		//按模块、槽位、端口号和描述信息升序排序
+		sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		DisplayInfo();
 	}
@@ -440,23 +419,124 @@ void CInfoDialog::OnAddData()
 	}
 }
 
+void CInfoDialog::OnModifyData()
+{	
+	//用于将屏幕上控件中的数据交换到变量中
+	UpdateData(TRUE);
+
+
+	getEditText();
+	if(moduleNum.IsEmpty() || slotNum.IsEmpty() || boardName.IsEmpty() || info.IsEmpty())
+	{
+		AfxMessageBox(_T("请把确认填写信息整!"),MB_ICONEXCLAMATION);
+		return;
+	}	
+
+	CString sql;
+	sql.Format(_T("select * from main where dataID = %s"),dataID);
+	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+	if(theApp.m_pRecordset->adoEOF)
+	{
+		AfxMessageBox(_T("数据库没有你要修改的信息!"),MB_ICONEXCLAMATION);
+		return;
+	}
+
+
+	if(AfxMessageBox(_T("确定修改?"),MB_YESNO)==IDYES)
+	{
+		sql.Format(_T("update main set moduleNum = '%s',slotNum = '%s',boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = '%s'"), moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info, dataID);
+		try
+		{
+			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+			MessageBox(_T("修改成功."),_T("提示"));
+
+		}
+		catch(_com_error &e)
+		{
+			MessageBox(e.Description());
+		}
+	}
+	UpdataList(0,0);
+}
+
+void CInfoDialog::OnDeleteData()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(TRUE);
+
+	if(dataID == "")
+	{
+		AfxMessageBox(_T("要删除的信息不能为空!"),MB_ICONEXCLAMATION);
+		return;
+	}
+	try
+	{
+		CString sql;
+		sql.Format(_T("select * from main where dataID = '%s'"),dataID);
+		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		if(theApp.m_pRecordset->adoEOF)
+		{
+			AfxMessageBox(_T("数据库没有你要删除的信息!"),MB_ICONEXCLAMATION);
+			return;
+		}
+		if(AfxMessageBox(_T("确定要删除此条数据?"),MB_YESNO)==IDYES)
+		{
+			sql.Format(_T("delete from main where dataID = '%s'"),dataID);
+			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+			MessageBox(_T("删除信息成功."));
+		}
+		sql.Format(_T("select * from main"));
+		theApp.m_pRecordset=theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		DisplayInfo();
+	}
+	catch(_com_error &e)
+	{
+		MessageBox(e.Description());
+	}
+}
+
+void CInfoDialog::OnClearData()
+{
+	dataID.Empty();
+	moduleNum.Empty();
+	slotNum.Empty();
+	boardName.Empty();
+	portNum.Empty();
+	timeSlot.Empty();
+	deviceNum.Empty();			
+	portType.Empty();
+	info.Empty();
+
+	m_modNum.SetWindowText(moduleNum);
+	m_slotNum.SetWindowText(slotNum);
+	m_boardName.SetWindowText(boardName);
+	m_portNum.SetWindowText(portNum);
+	m_timeSlot.SetWindowText(timeSlot);
+	m_devNum.SetWindowText(deviceNum);
+	m_portType.SetWindowText(portType);
+	m_info.SetWindowText(info);
+	UpdateData(FALSE);
+}
+
 void CInfoDialog::DisplayInfo()
 {
 	m_list.DeleteAllItems();
 	
 	m_containValue = 0;
 	int index = 0;
+	int maxDataID;
 	_variant_t var;
 	while(!theApp.m_pRecordset->adoEOF)
 	{
 		dataID.Empty();
-		boardName.Empty();
-		deviceNum.Empty();
-		info.Empty();
 		moduleNum.Empty();
-		portNum, portType.Empty();
 		slotNum.Empty();
+		boardName.Empty();
+		portNum.Empty();
 		timeSlot.Empty();
+		deviceNum.Empty();			
+		portType.Empty();
+		info.Empty();
 
 		var = theApp.m_pRecordset->GetCollect("dataID");
 		if(var.vt != VT_NULL)
@@ -468,6 +548,12 @@ void CInfoDialog::DisplayInfo()
 		else
 		{
 			m_list.InsertItem(index,dataID);
+		}
+
+		maxDataID = _ttoi(dataID);
+		if (m_containValue < maxDataID)
+		{
+			m_containValue = maxDataID;
 		}
 
 		var = theApp.m_pRecordset->GetCollect("moduleNum");
@@ -570,12 +656,10 @@ void CInfoDialog::DisplayInfo()
 		theApp.m_pRecordset->MoveNext();
 		index ++;			
 	}
-	m_containValue = index++;
 }
+
 void CInfoDialog::getEditText()
 {
-	dataID.Format(_T("%d"), (m_containValue + 1));
-	
 	m_modNum.GetWindowText(moduleNum);
 	m_slotNum.GetWindowText(slotNum);
 	m_boardName.GetWindowText(boardName);
@@ -583,14 +667,15 @@ void CInfoDialog::getEditText()
 	m_timeSlot.GetWindowText(timeSlot);
 	m_devNum.GetWindowText(deviceNum);
 	m_portType.GetWindowText(portType);
-	m_info.GetWindowText(info);
-	/*GetDlgItem(IDC_MODNUM)->GetWindowText(moduleNum);
-	GetDlgItem(IDC_SLOTNUM)->GetWindowText(slotNum);
-	GetDlgItem(IDC_BNAME)->GetWindowText(boardName);
-	GetDlgItem(IDC_PORTNUM)->GetWindowText(portNum);
-	GetDlgItem(IDC_TIMESLOT)->GetWindowText(timeSlot);
-	GetDlgItem(IDC_DEVICENUM)->GetWindowText(deviceNum);
-	GetDlgItem(IDC_PORTTYPE)->GetWindowText(portType);
-	GetDlgItem(IDC_INFO)->GetWindowText(info);*/
-	
+	m_info.GetWindowText(info);		
+}
+
+LRESULT CInfoDialog::UpdataList(WPARAM wParam,LPARAM lParam)
+{
+	//按模块、槽位、端口号和描述信息升序排序
+	CString sql;
+	sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
+	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+	DisplayInfo();
+	return 1L;
 }

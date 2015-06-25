@@ -28,7 +28,6 @@ public:
 	void OnInitADOConn();
 	void ExitConnect();
 	void AddToGrid();
-
 	
 	afx_msg void OnModuleNum();
 	afx_msg void OnSlotNum();
@@ -40,8 +39,15 @@ public:
 	afx_msg void OnInfo();
 	afx_msg void OnClickList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnAddData();
+	afx_msg void OnModifyData();
+	afx_msg void OnDeleteData();
+	afx_msg void OnClearData();
+	afx_msg LRESULT UpdataList(WPARAM wParam,LPARAM lParam);
+
 	void getEditText();
 	void DisplayInfo();
+
+
 	/*CListCtrl m_Grid;*/
 	CListCtrl m_list;
 	CString dataID;
@@ -55,14 +61,15 @@ public:
 	CString info;
 	int m_containValue;
 
-	CEdit m_boardName;
-	CEdit m_devNum;
-	CEdit m_info;
 	CEdit m_modNum;
-	CEdit m_portNum;
-	CEdit m_portType;
 	CEdit m_slotNum;
+	CEdit m_boardName;
+	CEdit m_portNum;
 	CEdit m_timeSlot;
+	CEdit m_devNum;
+	CEdit m_portType;
+	CEdit m_info;	
+	
 
 	CButton m_addButton;
 	CButton m_deleteButton;
@@ -73,4 +80,5 @@ public:
 
 protected:
 	void LoadControl();
+
 };

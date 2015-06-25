@@ -49,7 +49,10 @@ int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 	while(GetMessage(&msg,NULL,0,0))
 	{
 
-		theApp.PreTranslateMessage(&msg);
+		//屏蔽掉以后  不再出现  CEdit 框内按下一个字符出现四个字符现象  20150625
+		/*theApp.PreTranslateMessage(&msg);*/
+
+
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
