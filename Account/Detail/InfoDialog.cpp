@@ -66,8 +66,11 @@ BOOL CInfoDialog::OnInitDialog()
 void CInfoDialog::LoadControl()
 {
 	// 获取当前屏幕分辨率  -- 但不包括状态栏大小
-	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
-	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
+	/*int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);*/
+
+	int screenwidth=800;
+	int screenheight=600;
 
 	CRect m_rcPanel;
 	//设置当前窗口大小  与 当前屏幕分辨率 一致
@@ -89,20 +92,50 @@ void CInfoDialog::LoadControl()
 		pwnd->GetWindowRect(&rect);
 		ScreenToClient(&rect);
 		rect.right= 0.99* screenwidth;
-		rect.bottom=300;
+		rect.bottom=0.4 * screenheight;
 		pwnd->MoveWindow(&rect,TRUE);
 		pwnd = NULL;
 	}
-
 	
-	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
-	m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.7 * screenheight, 0.45* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
-	m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.7 * screenheight, 0.7* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
-	m_portNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.7 * screenheight, 0.95* screenwidth, 0.75 * screenheight), this, IDC_PORTNUM);
-	m_timeSlot.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.78 * screenheight, 0.2* screenwidth, 0.83 * screenheight), this, IDC_TIMESLOT);
-	m_devNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.78 * screenheight, 0.45* screenwidth, 0.83 * screenheight), this, IDC_DEVICENUM);
-	m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
-	m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.83 * screenheight), this, IDC_INFO);
+	dataIDText.Create(_T("编号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.42 * screenheight, 0.98 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_DATAID);
+	moduleNumText.Create(_T("模块："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.42* screenheight, 0.2 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_MODNUM);
+
+	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.22 * screenwidth, 0.42 * screenheight, 0.47 * screenwidth, 0.47 * screenheight), this, IDC_MODNUM);
+
+
+	slotNumText.Create(_T("槽位："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.5* screenheight, 0.2 * screenwidth, 0.55 * screenheight), this, IDC_TEXT_SLOTNUM);
+	boardNameText.Create(_T("板名："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.5* screenheight, 0.7 * screenwidth, 0.55 * screenheight), this, IDC_TEXT_BNAME);
+
+	m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.22 * screenwidth, 0.5 * screenheight, 0.47 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
+	m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.72 * screenwidth, 0.5 * screenheight, 0.97 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
+
+
+	portNumText.Create(_T("端口号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.59* screenheight, 0.2 * screenwidth, 0.64 * screenheight), this, IDC_TEXT_PORTNUM);
+	timeSlotText.Create(_T("使用时隙号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.59* screenheight, 0.7 * screenwidth, 0.64 * screenheight), this, IDC_TEXT_TIMESLOT);
+
+	m_portNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.22 * screenwidth, 0.59 * screenheight, 0.47* screenwidth, 0.64 * screenheight), this, IDC_PORTNUM);
+	m_timeSlot.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.72 * screenwidth, 0.59 * screenheight, 0.97* screenwidth, 0.64 * screenheight), this, IDC_TIMESLOT);
+
+
+	deviceNumText.Create(_T("设备号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.68* screenheight, 0.2 * screenwidth, 0.73 * screenheight), this, IDC_TEXT_DEVICENUM);
+	portTypeText.Create(_T("端口类型："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.68* screenheight, 0.7 * screenwidth, 0.73 * screenheight), this, IDC_TEXT_PORTTYPE);
+
+	m_devNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.22 * screenwidth, 0.68 * screenheight, 0.47* screenwidth, 0.73 * screenheight), this, IDC_DEVICENUM);
+	m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.72 * screenwidth, 0.68 * screenheight, 0.97* screenwidth, 0.73 * screenheight), this, IDC_PORTTYPE);
+
+
+	infoText.Create(_T("描述："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.77* screenheight, 0.2 * screenwidth, 0.82 * screenheight), this, IDC_TEXT_INFO);
+
+	m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.22 * screenwidth, 0.77 * screenheight, 0.97* screenwidth, 0.82 * screenheight), this, IDC_INFO);
+
+	//m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.1 * screenwidth, 0.7 * screenheight, 0.2* screenwidth, 0.75 * screenheight), this, IDC_MODNUM);
+	//m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.7 * screenheight, 0.45* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
+	//m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.6 * screenwidth, 0.7 * screenheight, 0.7* screenwidth, 0.75 * screenheight), this, IDC_BNAME);
+	//m_portNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.85 * screenwidth, 0.7 * screenheight, 0.95* screenwidth, 0.75 * screenheight), this, IDC_PORTNUM);
+	//m_timeSlot.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.1 * screenwidth, 0.78 * screenheight, 0.2* screenwidth, 0.83 * screenheight), this, IDC_TIMESLOT);
+	//m_devNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.35 * screenwidth, 0.78 * screenheight, 0.45* screenwidth, 0.83 * screenheight), this, IDC_DEVICENUM);
+	//m_portType.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.6 * screenwidth, 0.78 * screenheight, 0.7* screenwidth, 0.83 * screenheight), this, IDC_PORTTYPE);
+	//m_info.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.85 * screenwidth, 0.78 * screenheight, 0.95* screenwidth, 0.85 * screenheight), this, IDC_INFO);
 
 	// 创建四个按键
 	m_addButton.Create( _T("添加"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 0.07 * screenwidth, 0.85 * screenheight, 0.22* screenwidth, 0.95 * screenheight), this, IDC_BUTTON_ADD);
@@ -164,7 +197,9 @@ void CInfoDialog::AddToGrid()
 	/*OnInitADOConn();*/
 
 	// 获取屏幕宽度
-	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	/*int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);*/
+	int screenwidth=800;
+	/*int screenheight=600;*/
 
 	//创建 列表 表头 每列名字 及 按照 屏幕分辨率设置大小
 	m_list.InsertColumn(0,_T("编号"),LVCFMT_LEFT,( 0.06 * screenwidth), 0);
@@ -348,7 +383,7 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	
 	dataID = m_list.GetItemText(mark,0);
-
+	
 	moduleNum = m_list.GetItemText(mark,1);
 	m_modNum.SetWindowText(moduleNum);
 

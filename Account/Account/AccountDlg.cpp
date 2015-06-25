@@ -118,7 +118,8 @@ void CAccountDlg::LoadControl()
 {
 	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
 	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
-	
+	/*int screenwidth=800;
+	int screenheight=600;*/
 	
 	m_rcPanel.SetRect(0,0,screenwidth,screenheight);
 	MoveWindow(&m_rcPanel);

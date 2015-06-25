@@ -247,7 +247,7 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 		//InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
 
 	}
-	else if(str==_T("课程信息管理"))
+	else if(str==_T("信息管理"))
 	{
 		
 	}

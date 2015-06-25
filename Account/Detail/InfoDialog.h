@@ -60,6 +60,16 @@ public:
 	CString portType;
 	CString info;
 	int m_containValue;
+		
+	CStatic dataIDText;
+	CStatic moduleNumText;
+	CStatic slotNumText;
+	CStatic boardNameText;
+	CStatic portNumText;
+	CStatic timeSlotText;
+	CStatic deviceNumText;
+	CStatic portTypeText;
+	CStatic infoText;
 
 	CEdit m_modNum;
 	CEdit m_slotNum;
