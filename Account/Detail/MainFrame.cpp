@@ -97,8 +97,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	
 	// 获取当前屏幕分辨率  -- 但不包括状态栏大小
-	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
-	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
+	/*int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);*/
+	int screenwidth=800;
+	int screenheight=600;
 
 	CRect m_rcPanel;
 	//设置当前窗口大小  与 当前屏幕分辨率 一致
@@ -132,42 +134,42 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_wndTree.InsertItem(_T("模 块  I"),2,4,hti2);
 	}*/
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti2);
-	m_wndTree.InsertItem(_T("模 块  II"),2,4,hti2);	
-	m_wndTree.InsertItem(_T("模 块  III"),2,4,hti2);
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti2);
+	m_wndTree.InsertItem(_T("模块Ⅱ"),2,4,hti2);	
+	m_wndTree.InsertItem(_T("模块Ⅲ"),2,4,hti2);
 
 	HTREEITEM hti3=m_wndTree.InsertItem(_T("兰州西"),0,3,hti);
 	/*if(theApp.m_status!=_T("普通用户"))
 	{
 		m_wndTree.InsertItem(_T(""),2,4,hti3);
 	}*/
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti3);
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti3);
 
 	HTREEITEM hti4=m_wndTree.InsertItem(_T("兰西动车所"),0,3,hti);
 	/*if(theApp.m_status!=_T("普通用户"))
 	{
 		m_wndTree.InsertItem(_T(""),2,4,hti4);
 	}*/
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti4);
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti4);
 	
 	HTREEITEM hti5=m_wndTree.InsertItem(_T("陈家湾"),0,3,hti);
 	/*if(theApp.m_status!=_T("普通用户"))
 	{
 		m_wndTree.InsertItem(_T(""),2,4,hti5);
 	}*/
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti5);
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti5);
 	
 	HTREEITEM hti6=m_wndTree.InsertItem(_T("民和南"),0,3,hti);
 	/*if(theApp.m_status!=_T("普通用户"))
 	{
 	m_wndTree.InsertItem(_T(""),2,4,hti6);
 	}*/
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti6);	
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti6);	
 
 	HTREEITEM hti7=m_wndTree.InsertItem(_T("兰新高铁备用主系统"),0,3,hti);	
-	m_wndTree.InsertItem(_T("模 块  I"),2,4,hti7);
-	m_wndTree.InsertItem(_T("模 块  II"),2,4,hti7);	
-	m_wndTree.InsertItem(_T("模 块  III"),2,4,hti7);
+	m_wndTree.InsertItem(_T("模块Ⅰ"),2,4,hti7);
+	m_wndTree.InsertItem(_T("模块Ⅱ"),2,4,hti7);	
+	m_wndTree.InsertItem(_T("模块Ⅲ"),2,4,hti7);
 
 	HTREEITEM hti8=m_wndTree.InsertItem(_T("其它信息"),0,3, hti);
 	if(theApp.m_status!=_T("普通用户"))
@@ -232,14 +234,53 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 	pos+=20;
 	if(pos>0) pos=-70;
 	HTREEITEM hm=m_wndTree.GetSelectedItem();
+	HTREEITEM hItemParent;
 	CString str;
 	CRect rect;
+	CString listName;
+	CString mNum;
+	CString mItemParent;
+
+	listName.Empty();
+	mNum.Empty();
+
 	GetClientRect(&rect);
+	hItemParent = m_wndTree.GetParentItem(hm);
+	mItemParent = m_wndTree.GetItemText(hItemParent);
 	str=m_wndTree.GetItemText(hm);
-	if(str==_T("模 块  I"))
+	if (mItemParent == _T("兰新高铁主用主系统"))
 	{
-		m_wndTree.GetFirstVisibleItem();
+		listName.Format(_T("main"));
+	}
+	else if (mItemParent == _T("兰州西"))
+	{
+		listName.Format(_T("lanzhouxi"));
+	}
+	else if (mItemParent == _T("兰西动车所"))
+	{
+		listName.Format(_T("lanxidong"));
+	}
+	else if (mItemParent == _T("陈家湾"))
+	{
+		listName.Format(_T("chenjiawan"));
+	}
+	else if (mItemParent == _T("民和南"))
+	{
+		listName.Format(_T("minhenan"));
+	}
+	else if (mItemParent == _T("兰新高铁备用主系统"))
+	{
+		listName.Format(_T("spare"));
+	}
+	
+	if(str==_T("模块Ⅰ"))
+	{
+		
+
+		m_wndTree.GetFirstVisibleItem();		
+		mNum.Format(str);
 		CInfoDialog *infoDialog = new CInfoDialog;
+		infoDialog->onSetDatabase( listName, mNum, 1);
 		infoDialog->Create(IDD_INFODIALOG,this);
 		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 
@@ -247,13 +288,27 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 		//InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
 
 	}
-	else if(str==_T("信息管理"))
+	else if(str==_T("模块Ⅱ"))
 	{
-		
-	}
-	else if(str==_T("其它信息管理"))
-	{
+		mNum.Format(str);
+		CInfoDialog *infoDialog = new CInfoDialog;
+		infoDialog->onSetDatabase( listName, mNum, 1);
+		infoDialog->Create(IDD_INFODIALOG,this);
+		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 
+		//移动对话框的位置使其不重叠
+		//InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
+	}
+	else if(str==_T("模块Ⅲ"))
+	{
+		mNum.Format(str);
+		CInfoDialog *infoDialog = new CInfoDialog;
+		infoDialog->onSetDatabase( listName, mNum, 1);
+		infoDialog->Create(IDD_INFODIALOG,this);
+		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
+
+		//移动对话框的位置使其不重叠
+		//InStuInfoDlg->SetWindowPos(0,rect.right/2+pos,rect.bottom/2+pos,0,0,SWP_NOSIZE | SWP_NOZORDER);
 		
 	}
 	else if(str==_T("数据备份"))

@@ -43,6 +43,7 @@ public:
 	afx_msg void OnDeleteData();
 	afx_msg void OnClearData();
 	afx_msg LRESULT UpdataList(WPARAM wParam,LPARAM lParam);
+	afx_msg void onSetDatabase(CString listName, CString modNum, int bMod);
 
 	void getEditText();
 	void DisplayInfo();
@@ -51,6 +52,7 @@ public:
 	/*CListCtrl m_Grid;*/
 	CListCtrl m_list;
 	CString dataID;
+	int idataID;
 	CString moduleNum;
 	CString slotNum;
 	CString boardName;
@@ -59,6 +61,9 @@ public:
 	CString deviceNum;
 	CString portType;
 	CString info;
+
+	CString m_listName;
+	CString m_inquerySQL;
 	int m_containValue;
 		
 	CStatic dataIDText;
@@ -71,8 +76,12 @@ public:
 	CStatic portTypeText;
 	CStatic infoText;
 
+	/*
 	CEdit m_modNum;
 	CEdit m_slotNum;
+	*/
+	CComboBox m_cbModNum;
+	CComboBox m_cbSlotNum;
 	CEdit m_boardName;
 	CEdit m_portNum;
 	CEdit m_timeSlot;

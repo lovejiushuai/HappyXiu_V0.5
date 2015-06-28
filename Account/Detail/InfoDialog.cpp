@@ -15,6 +15,7 @@ CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CInfoDialog::IDD, pParent)
 {	
 	dataID.Empty();
+	idataID = 0;
 	moduleNum.Empty();
 	slotNum.Empty();
 	boardName.Empty();
@@ -23,6 +24,9 @@ CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	deviceNum.Empty();	
 	portType.Empty();	
 	info.Empty();
+
+	m_listName.Empty();
+	m_inquerySQL.Empty();
 	m_containValue = 0;
 }
 
@@ -43,6 +47,7 @@ BEGIN_MESSAGE_MAP(CInfoDialog, CDialog)
 	ON_BN_CLICKED( IDC_BUTTON_MODIFY, OnModifyData)
 	ON_BN_CLICKED( IDC_BUTTON_DELETE, OnDeleteData)
 	ON_BN_CLICKED( IDC_BUTTON_CLEAR, OnClearData)
+	ON_MESSAGE(CBN_SELENDOK, UpdataList)
 	ON_MESSAGE(WM_UPDATALIST, UpdataList)
 END_MESSAGE_MAP()
 
@@ -100,13 +105,31 @@ void CInfoDialog::LoadControl()
 	dataIDText.Create(_T("编号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.42 * screenheight, 0.98 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_DATAID);
 	moduleNumText.Create(_T("模块："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.42* screenheight, 0.2 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_MODNUM);
 
-	m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.22 * screenwidth, 0.42 * screenheight, 0.47 * screenwidth, 0.47 * screenheight), this, IDC_MODNUM);
-
+	//m_modNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, CRect(0.22 * screenwidth, 0.42 * screenheight, 0.47 * screenwidth, 0.47 * screenheight), this, IDC_MODNUM);
+	// 属性为CBS_DROPDOWNLIST 下拉列表框内不能输入，属性为  CBS_DROPDOWN 下拉列表框内可以输入
+	m_cbModNum.Create( WS_CHILD | WS_VISIBLE | WS_TABSTOP |/* CBS_DROPDOWN |*/ CBS_DROPDOWNLIST | CBS_OEMCONVERT | CBS_SORT /*| WS_VSCROLL*/, CRect(0.22 * screenwidth, 0.42 * screenheight, 0.47 * screenwidth, 0.47 * screenheight), this, IDC_MODNUM);
+	// 为组合框控件的列表框添加列表项 
+	m_cbModNum.InsertString(0,_T("--- 请选择 ---"));
+	m_cbModNum.AddString(_T("模块Ⅰ"));
+	m_cbModNum.AddString(_T("模块Ⅱ"));
+	m_cbModNum.InsertString(3, _T("模块Ⅲ")); 
+	m_cbModNum.SetCurSel(0);  // 设置当前选中项
+	
+	m_cbSlotNum.Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP |/* CBS_DROPDOWN |*/ CBS_DROPDOWNLIST | CBS_OEMCONVERT | CBS_SORT /*| WS_VSCROLL*/, CRect(0.22 * screenwidth, 0.5 * screenheight, 0.47 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
+	// 为组合框控件的列表框添加列表项 	
+	CString insertSlotName;
+	insertSlotName.Empty();
+	for (int i = 0; i < 16; i++)
+	{
+		insertSlotName.Format(_T("槽位%d"),i);
+		m_cbSlotNum.InsertString(i,insertSlotName);
+	}	
+	m_cbSlotNum.SetCurSel(0);  // 设置当前选中项
 
 	slotNumText.Create(_T("槽位："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.5* screenheight, 0.2 * screenwidth, 0.55 * screenheight), this, IDC_TEXT_SLOTNUM);
 	boardNameText.Create(_T("板名："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.5* screenheight, 0.7 * screenwidth, 0.55 * screenheight), this, IDC_TEXT_BNAME);
 
-	m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.22 * screenwidth, 0.5 * screenheight, 0.47 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
+	//m_slotNum.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.22 * screenwidth, 0.5 * screenheight, 0.47 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
 	m_boardName.Create(/*ES_MULTILINE |*/ WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER, CRect(0.72 * screenwidth, 0.5 * screenheight, 0.97 * screenwidth, 0.55 * screenheight), this, IDC_BNAME);
 
 
@@ -221,7 +244,7 @@ void CInfoDialog::AddToGrid()
 	try
 	{
 		//按模块、槽位、端口号和描述信息升序排序
-		sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
+		sql.Format(_T("select * from %s order by %s.moduleNum,%s.slotNum,%s.portNum,%s.info asc"), m_inquerySQL, m_listName, m_listName, m_listName, m_listName);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		_variant_t var;
 		while(!theApp.m_pRecordset->adoEOF)
@@ -383,12 +406,96 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	
 	dataID = m_list.GetItemText(mark,0);
+	idataID = _ttoi(dataID);
+	CString strShow;
+	strShow.Format(_T("编号：%s"),dataID);
+	dataIDText.SetDlgItemText( IDC_TEXT_DATAID, strShow);
 	
 	moduleNum = m_list.GetItemText(mark,1);
-	m_modNum.SetWindowText(moduleNum);
+	/*m_modNum.SetWindowText(moduleNum);*/
+	if (moduleNum == _T("模块Ⅰ"))
+	{
+		m_cbModNum.SetCurSel(1);
+	}
+	else if (moduleNum == _T("模块Ⅱ"))
+	{
+		m_cbModNum.SetCurSel(2);
+	}
+	else if (moduleNum == _T("模块Ⅲ"))
+	{
+		m_cbModNum.SetCurSel(3);
+	}
+	
+	m_cbModNum.GetLBText(m_cbModNum.GetCurSel(),moduleNum);
 
 	slotNum = m_list.GetItemText(mark,2);
-	m_slotNum.SetWindowText(slotNum);
+	/*m_slotNum.SetWindowText(slotNum);*/
+
+	if (slotNum == _T("0"))
+	{
+		m_cbSlotNum.SetCurSel(0);
+	}
+	else if (slotNum == _T("1"))
+	{
+		m_cbSlotNum.SetCurSel(1);
+	}
+	else if (slotNum == _T("2"))
+	{
+		m_cbSlotNum.SetCurSel(2);
+	}
+	else if (slotNum == _T("3"))
+	{
+		m_cbSlotNum.SetCurSel(3);
+	}
+	else if (slotNum == _T("4"))
+	{
+		m_cbSlotNum.SetCurSel(4);
+	}
+	else if (slotNum == _T("5"))
+	{
+		m_cbSlotNum.SetCurSel(5);
+	}
+	else if (slotNum == _T("6"))
+	{
+		m_cbSlotNum.SetCurSel(6);
+	}
+	else if (slotNum == _T("7"))
+	{
+		m_cbSlotNum.SetCurSel(7);
+	}
+	else if (slotNum == _T("8"))
+	{
+		m_cbSlotNum.SetCurSel(8);
+	}
+	else if (slotNum == _T("9"))
+	{
+		m_cbSlotNum.SetCurSel(9);
+	}
+	else if (slotNum == _T("10"))
+	{
+		m_cbSlotNum.SetCurSel(10);
+	}
+	else if (slotNum == _T("11"))
+	{
+		m_cbSlotNum.SetCurSel(11);
+	}
+	else if (slotNum == _T("12"))
+	{
+		m_cbSlotNum.SetCurSel(12);
+	}
+	else if (slotNum == _T("13"))
+	{
+		m_cbSlotNum.SetCurSel(13);
+	}
+	else if (slotNum == _T("14"))
+	{
+		m_cbSlotNum.SetCurSel(14);
+	}
+	else if (slotNum == _T("15"))
+	{
+		m_cbSlotNum.SetCurSel(15);
+	}
+
 
 	boardName = m_list.GetItemText(mark,3);
 	m_boardName.SetWindowText(boardName);
@@ -427,9 +534,13 @@ void CInfoDialog::OnAddData()
 		AfxMessageBox(_T("请把确认填写信息整!"),MB_ICONEXCLAMATION);
 		return;
 	}	
+	if (m_cbModNum.GetCurSel() == 0)
+	{
+		AfxMessageBox(_T("请选择要添加进的模块!"),MB_ICONEXCLAMATION);
+		return;
+	}
 
-
-	dataID.Format(_T("%d"), m_containValue + 1);
+	/*dataID.Format(_T("%d"), m_containValue + 1);*/
 
 	CString sql,number;	
 	try
@@ -439,12 +550,12 @@ void CInfoDialog::OnAddData()
 		//	m_stuYear,m_stuMonth);
 		/*sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"),+ m_containValue +",'"+moduleNum+"','"+slotNum+"',"+boardName+",'"+portNum+"',"+timeSlot+",\
 																																																												  "+deviceNum+","+portType+","+info+"')");*/
-		sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), dataID, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
+		sql.Format(_T("insert into %s(moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), m_listName, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
 		theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		MessageBox(_T("录入成功."),_T("提示"));
 
 		//按模块、槽位、端口号和描述信息升序排序
-		sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
+		sql.Format(_T("select * from %s order by %s.moduleNum,%s.slotNum,%s.portNum,%s.info asc"), m_inquerySQL, m_listName, m_listName, m_listName, m_listName);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		DisplayInfo();
 	}
@@ -466,9 +577,14 @@ void CInfoDialog::OnModifyData()
 		AfxMessageBox(_T("请把确认填写信息整!"),MB_ICONEXCLAMATION);
 		return;
 	}	
+	if (m_cbModNum.GetCurSel() == 0)
+	{
+		AfxMessageBox(_T("请选择要添加进的模块!"),MB_ICONEXCLAMATION);
+		return;
+	}
 
 	CString sql;
-	sql.Format(_T("select * from main where dataID = %s"),dataID);
+	sql.Format(_T("select * from main where dataID = %d"),idataID);
 	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 	if(theApp.m_pRecordset->adoEOF)
 	{
@@ -479,7 +595,7 @@ void CInfoDialog::OnModifyData()
 
 	if(AfxMessageBox(_T("确定修改?"),MB_YESNO)==IDYES)
 	{
-		sql.Format(_T("update main set moduleNum = '%s',slotNum = '%s',boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = '%s'"), moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info, dataID);
+		sql.Format(_T("update %s set moduleNum = '%s',slotNum = '%s',boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = %d"), m_listName, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info, idataID);
 		try
 		{
 			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
@@ -499,7 +615,7 @@ void CInfoDialog::OnDeleteData()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 
-	if(dataID == "")
+	if(idataID == 0)
 	{
 		AfxMessageBox(_T("要删除的信息不能为空!"),MB_ICONEXCLAMATION);
 		return;
@@ -507,7 +623,7 @@ void CInfoDialog::OnDeleteData()
 	try
 	{
 		CString sql;
-		sql.Format(_T("select * from main where dataID = '%s'"),dataID);
+		sql.Format(_T("select * from %s where dataID = '%s'"), m_listName,idataID);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		if(theApp.m_pRecordset->adoEOF)
 		{
@@ -516,7 +632,7 @@ void CInfoDialog::OnDeleteData()
 		}
 		if(AfxMessageBox(_T("确定要删除此条数据?"),MB_YESNO)==IDYES)
 		{
-			sql.Format(_T("delete from main where dataID = '%s'"),dataID);
+			sql.Format(_T("delete from main where dataID = '%s'"),idataID);
 			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			MessageBox(_T("删除信息成功."));
 		}
@@ -542,8 +658,84 @@ void CInfoDialog::OnClearData()
 	portType.Empty();
 	info.Empty();
 
-	m_modNum.SetWindowText(moduleNum);
-	m_slotNum.SetWindowText(slotNum);
+	/*m_modNum.SetWindowText(moduleNum);*/
+	if (moduleNum == _T("模块Ⅰ"))
+	{
+		m_cbModNum.SetCurSel(1);
+	}
+	else if (moduleNum == _T("模块Ⅱ"))
+	{
+		m_cbModNum.SetCurSel(2);
+	}
+	else if (moduleNum == _T("模块Ⅲ"))
+	{
+		m_cbModNum.SetCurSel(3);
+	}
+	/*m_slotNum.SetWindowText(slotNum);*/
+	if (slotNum == _T("0"))
+	{
+		m_cbSlotNum.SetCurSel(0);
+	}
+	else if (slotNum == _T("1"))
+	{
+		m_cbSlotNum.SetCurSel(1);
+	}
+	else if (slotNum == _T("2"))
+	{
+		m_cbSlotNum.SetCurSel(2);
+	}
+	else if (slotNum == _T("3"))
+	{
+		m_cbSlotNum.SetCurSel(3);
+	}
+	else if (slotNum == _T("4"))
+	{
+		m_cbSlotNum.SetCurSel(4);
+	}
+	else if (slotNum == _T("5"))
+	{
+		m_cbSlotNum.SetCurSel(5);
+	}
+	else if (slotNum == _T("6"))
+	{
+		m_cbSlotNum.SetCurSel(6);
+	}
+	else if (slotNum == _T("7"))
+	{
+		m_cbSlotNum.SetCurSel(7);
+	}
+	else if (slotNum == _T("8"))
+	{
+		m_cbSlotNum.SetCurSel(8);
+	}
+	else if (slotNum == _T("9"))
+	{
+		m_cbSlotNum.SetCurSel(9);
+	}
+	else if (slotNum == _T("10"))
+	{
+		m_cbSlotNum.SetCurSel(10);
+	}
+	else if (slotNum == _T("11"))
+	{
+		m_cbSlotNum.SetCurSel(11);
+	}
+	else if (slotNum == _T("12"))
+	{
+		m_cbSlotNum.SetCurSel(12);
+	}
+	else if (slotNum == _T("13"))
+	{
+		m_cbSlotNum.SetCurSel(13);
+	}
+	else if (slotNum == _T("14"))
+	{
+		m_cbSlotNum.SetCurSel(14);
+	}
+	else if (slotNum == _T("15"))
+	{
+		m_cbSlotNum.SetCurSel(15);
+	}
 	m_boardName.SetWindowText(boardName);
 	m_portNum.SetWindowText(portNum);
 	m_timeSlot.SetWindowText(timeSlot);
@@ -695,8 +887,11 @@ void CInfoDialog::DisplayInfo()
 
 void CInfoDialog::getEditText()
 {
-	m_modNum.GetWindowText(moduleNum);
-	m_slotNum.GetWindowText(slotNum);
+	/*m_modNum.GetWindowText(moduleNum);*/
+	m_cbModNum.GetLBText(m_cbModNum.GetCurSel(),moduleNum);
+	/*m_slotNum.GetWindowText(slotNum);*/
+	m_cbSlotNum.GetLBText(m_cbModNum.GetCurSel(),slotNum);
+
 	m_boardName.GetWindowText(boardName);
 	m_portNum.GetWindowText(portNum);
 	m_timeSlot.GetWindowText(timeSlot);
@@ -709,8 +904,32 @@ LRESULT CInfoDialog::UpdataList(WPARAM wParam,LPARAM lParam)
 {
 	//按模块、槽位、端口号和描述信息升序排序
 	CString sql;
-	sql.Format(_T("select * from main order by main.moduleNum,main.slotNum,main.portNum,main.info asc"));
+	sql.Format(_T("select * from %s order by %s.moduleNum,%s.slotNum,%s.portNum,%s.info asc"), m_inquerySQL, m_listName, m_listName, m_listName, m_listName);
 	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 	DisplayInfo();
 	return 1L;
+}
+
+void CInfoDialog::onSetDatabase(CString listName, CString mod, int bMod)
+{
+	//设置表单名字 & 需要查询模块号
+	m_inquerySQL.Empty();
+	if (!listName.IsEmpty())
+	{
+		m_listName.Format(_T("%s"),listName);
+	}
+	else
+	{
+		m_listName.Format(_T("%s"),_T("main"));
+	}
+	
+	if (bMod)
+	{
+		moduleNum.Format(_T("%s"),mod);
+		m_inquerySQL.Format(_T("%s where moduleNum = '%s'"), m_listName, moduleNum);
+	}
+	else
+	{
+		m_inquerySQL.Format(_T("%s"), m_listName);
+	}
 }
