@@ -240,9 +240,11 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 	CString listName;
 	CString mNum;
 	CString mItemParent;
+	int selectModNum;
 
 	listName.Empty();
 	mNum.Empty();
+	selectModNum = 0;
 
 	GetClientRect(&rect);
 	hItemParent = m_wndTree.GetParentItem(hm);
@@ -279,8 +281,9 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 
 		m_wndTree.GetFirstVisibleItem();		
 		mNum.Format(str);
+		selectModNum = 1;
 		CInfoDialog *infoDialog = new CInfoDialog;
-		infoDialog->onSetDatabase( listName, mNum, 1);
+		infoDialog->onSetDatabase( listName, mNum, selectModNum, 1);
 		infoDialog->Create(IDD_INFODIALOG,this);
 		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 
@@ -291,8 +294,9 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 	else if(str==_T("模块Ⅱ"))
 	{
 		mNum.Format(str);
+		selectModNum = 2;
 		CInfoDialog *infoDialog = new CInfoDialog;
-		infoDialog->onSetDatabase( listName, mNum, 1);
+		infoDialog->onSetDatabase( listName, mNum, selectModNum, 1);
 		infoDialog->Create(IDD_INFODIALOG,this);
 		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 
@@ -302,8 +306,9 @@ void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击
 	else if(str==_T("模块Ⅲ"))
 	{
 		mNum.Format(str);
+		selectModNum = 3;
 		CInfoDialog *infoDialog = new CInfoDialog;
-		infoDialog->onSetDatabase( listName, mNum, 1);
+		infoDialog->onSetDatabase( listName, mNum, selectModNum, 1);
 		infoDialog->Create(IDD_INFODIALOG,this);
 		infoDialog->ShowWindow(SW_SHOW);	//显示非模态对话框
 

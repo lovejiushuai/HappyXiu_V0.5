@@ -15,7 +15,6 @@ CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CInfoDialog::IDD, pParent)
 {	
 	dataID.Empty();
-	idataID = 0;
 	moduleNum.Empty();
 	slotNum.Empty();
 	boardName.Empty();
@@ -28,6 +27,9 @@ CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	m_listName.Empty();
 	m_inquerySQL.Empty();
 	m_containValue = 0;
+	idataID = 0;
+	imoduleNum = 0;
+	islotNum = 0;
 }
 
 CInfoDialog::~CInfoDialog()
@@ -257,9 +259,12 @@ void CInfoDialog::AddToGrid()
 			timeSlot.Empty();
 			deviceNum.Empty();			
 			portType.Empty();
-			info.Empty();			
+			info.Empty();
+			idataID = 0;
+			imoduleNum = 0;
+			islotNum = 0;
 
-			var = theApp.m_pRecordset->GetCollect("dataID");
+			/*var = theApp.m_pRecordset->GetCollect("dataID");
 			if(var.vt != VT_NULL)
 			{
 				dataID = (char*)(_bstr_t)var;
@@ -299,9 +304,68 @@ void CInfoDialog::AddToGrid()
 			}
 			else
 			{
-				m_list.SetItemText(index,4,portNum);
-			}
+				m_list.SetItemText(index,2,portNum);
+			}*/
 			
+			var = theApp.m_pRecordset->GetCollect("dataID");
+			if(var.vt != VT_NULL)
+			{				
+				dataID = (char*)(_bstr_t)var;				
+				m_list.InsertItem(index,dataID);
+			}
+			else
+			{
+				m_list.InsertItem(index,dataID);
+			}
+
+
+			/*maxDataID = _ttoi(dataID);
+			if (m_containValue < maxDataID)
+			{
+				m_containValue = maxDataID;
+			}*/
+
+			var = theApp.m_pRecordset->GetCollect("moduleNum");
+			if(var.vt != VT_NULL)
+			{
+				imoduleNum = var;				
+				switch( imoduleNum )
+				{
+				case 1:
+					moduleNum.Format(_T("模块Ⅰ"));
+					break;
+				case 2:
+					moduleNum.Format(_T("模块Ⅱ"));
+					break;
+				case 3:
+					moduleNum.Format(_T("模块Ⅲ"));
+					break;
+				default:
+					moduleNum.Format(_T("other"));
+				}
+				/*moduleNum = (char*)(_bstr_t)var;*/
+				m_list.SetItemText(index,1,moduleNum);
+
+			}
+			else
+			{
+				m_list.SetItemText(index,1,moduleNum);
+			}
+
+			var =theApp. m_pRecordset->GetCollect("slotNum");			
+			if(var.vt != VT_NULL)
+			{
+				islotNum = var;
+				/*slotNum = (char*)(_bstr_t)var;*/
+				slotNum.Format(_T("%d"),islotNum);
+				m_list.SetItemText(index,2,slotNum);
+
+			}
+			else
+			{
+				m_list.SetItemText(index,2,portNum);
+			}
+
 			var = theApp.m_pRecordset->GetCollect("boardName");			
 			if(var.vt != VT_NULL)
 			{				
@@ -431,70 +495,8 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 	slotNum = m_list.GetItemText(mark,2);
 	/*m_slotNum.SetWindowText(slotNum);*/
 
-	if (slotNum == _T("0"))
-	{
-		m_cbSlotNum.SetCurSel(0);
-	}
-	else if (slotNum == _T("1"))
-	{
-		m_cbSlotNum.SetCurSel(1);
-	}
-	else if (slotNum == _T("2"))
-	{
-		m_cbSlotNum.SetCurSel(2);
-	}
-	else if (slotNum == _T("3"))
-	{
-		m_cbSlotNum.SetCurSel(3);
-	}
-	else if (slotNum == _T("4"))
-	{
-		m_cbSlotNum.SetCurSel(4);
-	}
-	else if (slotNum == _T("5"))
-	{
-		m_cbSlotNum.SetCurSel(5);
-	}
-	else if (slotNum == _T("6"))
-	{
-		m_cbSlotNum.SetCurSel(6);
-	}
-	else if (slotNum == _T("7"))
-	{
-		m_cbSlotNum.SetCurSel(7);
-	}
-	else if (slotNum == _T("8"))
-	{
-		m_cbSlotNum.SetCurSel(8);
-	}
-	else if (slotNum == _T("9"))
-	{
-		m_cbSlotNum.SetCurSel(9);
-	}
-	else if (slotNum == _T("10"))
-	{
-		m_cbSlotNum.SetCurSel(10);
-	}
-	else if (slotNum == _T("11"))
-	{
-		m_cbSlotNum.SetCurSel(11);
-	}
-	else if (slotNum == _T("12"))
-	{
-		m_cbSlotNum.SetCurSel(12);
-	}
-	else if (slotNum == _T("13"))
-	{
-		m_cbSlotNum.SetCurSel(13);
-	}
-	else if (slotNum == _T("14"))
-	{
-		m_cbSlotNum.SetCurSel(14);
-	}
-	else if (slotNum == _T("15"))
-	{
-		m_cbSlotNum.SetCurSel(15);
-	}
+	islotNum = _ttoi(slotNum);
+	m_cbSlotNum.SetCurSel(islotNum);
 
 
 	boardName = m_list.GetItemText(mark,3);
@@ -550,7 +552,7 @@ void CInfoDialog::OnAddData()
 		//	m_stuYear,m_stuMonth);
 		/*sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"),+ m_containValue +",'"+moduleNum+"','"+slotNum+"',"+boardName+",'"+portNum+"',"+timeSlot+",\
 																																																												  "+deviceNum+","+portType+","+info+"')");*/
-		sql.Format(_T("insert into %s(moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), m_listName, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
+		sql.Format(_T("insert into %s(moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s')"), m_listName, imoduleNum, islotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
 		theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		MessageBox(_T("录入成功."),_T("提示"));
 
@@ -582,6 +584,11 @@ void CInfoDialog::OnModifyData()
 		AfxMessageBox(_T("请选择要添加进的模块!"),MB_ICONEXCLAMATION);
 		return;
 	}
+	if (idataID == 0)
+	{
+		AfxMessageBox(_T("请选择要修改的数据!"),MB_ICONEXCLAMATION);
+		return;
+	}
 
 	CString sql;
 	sql.Format(_T("select * from main where dataID = %d"),idataID);
@@ -595,7 +602,7 @@ void CInfoDialog::OnModifyData()
 
 	if(AfxMessageBox(_T("确定修改?"),MB_YESNO)==IDYES)
 	{
-		sql.Format(_T("update %s set moduleNum = '%s',slotNum = '%s',boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = %d"), m_listName, moduleNum, slotNum, boardName, portNum, timeSlot, deviceNum, portType, info, idataID);
+		sql.Format(_T("update %s set moduleNum = %d,slotNum = %d,boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = %d"), m_listName, imoduleNum, islotNum, boardName, portNum, timeSlot, deviceNum, portType, info, idataID);
 		try
 		{
 			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
@@ -623,7 +630,7 @@ void CInfoDialog::OnDeleteData()
 	try
 	{
 		CString sql;
-		sql.Format(_T("select * from %s where dataID = '%s'"), m_listName,idataID);
+		sql.Format(_T("select * from %s where dataID = %d"), m_listName,idataID);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		if(theApp.m_pRecordset->adoEOF)
 		{
@@ -632,11 +639,11 @@ void CInfoDialog::OnDeleteData()
 		}
 		if(AfxMessageBox(_T("确定要删除此条数据?"),MB_YESNO)==IDYES)
 		{
-			sql.Format(_T("delete from main where dataID = '%s'"),idataID);
+			sql.Format(_T("delete from %s where dataID = %d"), m_listName, idataID);
 			theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			MessageBox(_T("删除信息成功."));
 		}
-		sql.Format(_T("select * from main"));
+		sql.Format(_T("select * from %s"), m_listName);
 		theApp.m_pRecordset=theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		DisplayInfo();
 	}
@@ -657,85 +664,16 @@ void CInfoDialog::OnClearData()
 	deviceNum.Empty();			
 	portType.Empty();
 	info.Empty();
+	idataID = 0;
+	imoduleNum = 0;
+	islotNum = 0;
 
-	/*m_modNum.SetWindowText(moduleNum);*/
-	if (moduleNum == _T("模块Ⅰ"))
-	{
-		m_cbModNum.SetCurSel(1);
-	}
-	else if (moduleNum == _T("模块Ⅱ"))
-	{
-		m_cbModNum.SetCurSel(2);
-	}
-	else if (moduleNum == _T("模块Ⅲ"))
-	{
-		m_cbModNum.SetCurSel(3);
-	}
-	/*m_slotNum.SetWindowText(slotNum);*/
-	if (slotNum == _T("0"))
-	{
-		m_cbSlotNum.SetCurSel(0);
-	}
-	else if (slotNum == _T("1"))
-	{
-		m_cbSlotNum.SetCurSel(1);
-	}
-	else if (slotNum == _T("2"))
-	{
-		m_cbSlotNum.SetCurSel(2);
-	}
-	else if (slotNum == _T("3"))
-	{
-		m_cbSlotNum.SetCurSel(3);
-	}
-	else if (slotNum == _T("4"))
-	{
-		m_cbSlotNum.SetCurSel(4);
-	}
-	else if (slotNum == _T("5"))
-	{
-		m_cbSlotNum.SetCurSel(5);
-	}
-	else if (slotNum == _T("6"))
-	{
-		m_cbSlotNum.SetCurSel(6);
-	}
-	else if (slotNum == _T("7"))
-	{
-		m_cbSlotNum.SetCurSel(7);
-	}
-	else if (slotNum == _T("8"))
-	{
-		m_cbSlotNum.SetCurSel(8);
-	}
-	else if (slotNum == _T("9"))
-	{
-		m_cbSlotNum.SetCurSel(9);
-	}
-	else if (slotNum == _T("10"))
-	{
-		m_cbSlotNum.SetCurSel(10);
-	}
-	else if (slotNum == _T("11"))
-	{
-		m_cbSlotNum.SetCurSel(11);
-	}
-	else if (slotNum == _T("12"))
-	{
-		m_cbSlotNum.SetCurSel(12);
-	}
-	else if (slotNum == _T("13"))
-	{
-		m_cbSlotNum.SetCurSel(13);
-	}
-	else if (slotNum == _T("14"))
-	{
-		m_cbSlotNum.SetCurSel(14);
-	}
-	else if (slotNum == _T("15"))
-	{
-		m_cbSlotNum.SetCurSel(15);
-	}
+	/*m_modNum.SetWindowText(moduleNum);*/	
+	m_cbModNum.SetCurSel(1);
+	
+	/*m_slotNum.SetWindowText(slotNum);*/	
+	m_cbSlotNum.SetCurSel(0);
+	
 	m_boardName.SetWindowText(boardName);
 	m_portNum.SetWindowText(portNum);
 	m_timeSlot.SetWindowText(timeSlot);
@@ -764,8 +702,11 @@ void CInfoDialog::DisplayInfo()
 		deviceNum.Empty();			
 		portType.Empty();
 		info.Empty();
+		idataID = 0;
+		imoduleNum = 0;
+		islotNum = 0;
 
-		var = theApp.m_pRecordset->GetCollect("dataID");
+		/*var = theApp.m_pRecordset->GetCollect("dataID");
 		if(var.vt != VT_NULL)
 		{
 			dataID = (char*)(_bstr_t)var;
@@ -804,7 +745,66 @@ void CInfoDialog::DisplayInfo()
 		}
 		else
 		{
-			m_list.SetItemText(index,4,portNum);
+			m_list.SetItemText(index,2,portNum);
+		}*/
+
+		var = theApp.m_pRecordset->GetCollect("dataID");
+		if(var.vt != VT_NULL)
+		{				
+			dataID = (char*)(_bstr_t)var;				
+			m_list.InsertItem(index,dataID);
+		}
+		else
+		{
+			m_list.InsertItem(index,dataID);
+		}
+
+
+		/*maxDataID = _ttoi(dataID);
+		if (m_containValue < maxDataID)
+		{
+			m_containValue = maxDataID;
+		}*/
+
+		var = theApp.m_pRecordset->GetCollect("moduleNum");
+		if(var.vt != VT_NULL)
+		{
+			imoduleNum = var;				
+			switch( imoduleNum )
+			{
+			case 1:
+				moduleNum.Format(_T("模块Ⅰ"));
+				break;
+			case 2:
+				moduleNum.Format(_T("模块Ⅱ"));
+				break;
+			case 3:
+				moduleNum.Format(_T("模块Ⅲ"));
+				break;
+			default:
+				moduleNum.Format(_T("other"));
+			}
+			/*moduleNum = (char*)(_bstr_t)var;*/
+			m_list.SetItemText(index,1,moduleNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,1,moduleNum);
+		}
+
+		var =theApp. m_pRecordset->GetCollect("slotNum");			
+		if(var.vt != VT_NULL)
+		{
+			islotNum = var;
+			/*slotNum = (char*)(_bstr_t)var;*/
+			slotNum.Format(_T("%d"),islotNum);
+			m_list.SetItemText(index,2,slotNum);
+
+		}
+		else
+		{
+			m_list.SetItemText(index,2,portNum);
 		}
 
 		var = theApp.m_pRecordset->GetCollect("boardName");			
@@ -887,10 +887,16 @@ void CInfoDialog::DisplayInfo()
 
 void CInfoDialog::getEditText()
 {
-	/*m_modNum.GetWindowText(moduleNum);*/
-	m_cbModNum.GetLBText(m_cbModNum.GetCurSel(),moduleNum);
-	/*m_slotNum.GetWindowText(slotNum);*/
+	/*m_modNum.GetWindowText(moduleNum);
+	m_slotNum.GetWindowText(slotNum);*/
+	/*m_cbModNum.GetLBText(m_cbModNum.GetCurSel(),moduleNum);	
+	m_cbSlotNum.GetLBText(m_cbModNum.GetCurSel(),slotNum);*/
+	
+	m_cbModNum.GetLBText(m_cbModNum.GetCurSel(),moduleNum);	
 	m_cbSlotNum.GetLBText(m_cbModNum.GetCurSel(),slotNum);
+
+	imoduleNum = m_cbModNum.GetCurSel();
+	islotNum = m_cbModNum.GetCurSel();
 
 	m_boardName.GetWindowText(boardName);
 	m_portNum.GetWindowText(portNum);
@@ -910,7 +916,7 @@ LRESULT CInfoDialog::UpdataList(WPARAM wParam,LPARAM lParam)
 	return 1L;
 }
 
-void CInfoDialog::onSetDatabase(CString listName, CString mod, int bMod)
+void CInfoDialog::onSetDatabase(CString listName, CString modN, int mod, int bMod)
 {
 	//设置表单名字 & 需要查询模块号
 	m_inquerySQL.Empty();
@@ -925,8 +931,9 @@ void CInfoDialog::onSetDatabase(CString listName, CString mod, int bMod)
 	
 	if (bMod)
 	{
-		moduleNum.Format(_T("%s"),mod);
-		m_inquerySQL.Format(_T("%s where moduleNum = '%s'"), m_listName, moduleNum);
+		imoduleNum = mod;
+		moduleNum.Format(_T("%s"),modN);
+		m_inquerySQL.Format(_T("%s where moduleNum = %d"), m_listName, imoduleNum);
 	}
 	else
 	{

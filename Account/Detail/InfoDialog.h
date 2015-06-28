@@ -43,16 +43,18 @@ public:
 	afx_msg void OnDeleteData();
 	afx_msg void OnClearData();
 	afx_msg LRESULT UpdataList(WPARAM wParam,LPARAM lParam);
-	afx_msg void onSetDatabase(CString listName, CString modNum, int bMod);
+	afx_msg void onSetDatabase(CString listName, CString modN, int mod, int bMod);
 
 	void getEditText();
 	void DisplayInfo();
 
+	int idataID;
+	int imoduleNum;
+	int islotNum;
 
 	/*CListCtrl m_Grid;*/
 	CListCtrl m_list;
-	CString dataID;
-	int idataID;
+	CString dataID;	
 	CString moduleNum;
 	CString slotNum;
 	CString boardName;
