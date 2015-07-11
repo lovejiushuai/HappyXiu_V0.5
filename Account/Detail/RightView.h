@@ -23,6 +23,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+
+
+protected:
+	void LoadControl();
 };
 
 

@@ -26,6 +26,8 @@ public:
 	CString m_status;
 	_ConnectionPtr m_pConnection;
 	_RecordsetPtr  m_pRecordset;
+	CCreateContext cc;
+
 // Overrides
 public:
 	virtual BOOL InitInstance();

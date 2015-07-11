@@ -87,10 +87,10 @@
     <ClCompile Include="RightView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CoolTabCtrl.cpp">
+    <ClCompile Include="InfoDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InfoDialog.cpp">
+    <ClCompile Include="LeftCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,10 +122,10 @@
     <ClInclude Include="RightView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CoolTabCtrl.h">
+    <ClInclude Include="InfoDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InfoDialog.h">
+    <ClInclude Include="LeftCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoolTabCtrl.h"
+#include "LeftCtrl.h"
 #include "RightView.h"
 #include "TabSplitterWnd.h"
 
@@ -31,13 +31,15 @@ public:
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
 
 protected:
-	CCoolTabCtrl *m_pLeft;
+	CLeftCtrl *m_pLeft;
 	CRightView *m_pRight;
 	CTabSplitterWnd m_wndSplitter;
 	CTreeCtrl m_wndTree;
 		
 	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 	afx_msg void OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult);
+
+	void LoadControl();
 
 public:
 	/*_ConnectionPtr m_pConnection;

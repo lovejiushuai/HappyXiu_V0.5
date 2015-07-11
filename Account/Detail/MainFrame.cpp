@@ -65,6 +65,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  Add your specialized creation code here
 
+	LoadControl();
+
+	return 1L;
+}
+
+void CMainFrame::LoadControl()
+{
 		
 
 #if _WIN32_WINNT > 0x500
@@ -114,7 +121,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect(0, 0, 0, 0), m_pLeft, 100))  ///注意，这里是将m_pLeft作为m_wndTree的父窗口
 	{
 		TRACE0("Failed to create instant bar child\n");
-		return -1;
+		return;
 	}
 	m_wndTree.ModifyStyleEx(0, WS_EX_CLIENTEDGE);
 	//添加树型控件图标
@@ -189,14 +196,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndTree.Expand(hti7,TVE_EXPAND);
 	m_wndTree.Expand(hti8,TVE_EXPAND);*/
 
-	///将树型控件加入到TabCtrl中
+	///将树型控件加入到LeftCtrl中
 	m_pLeft->AddPage(&m_wndTree,_T("Dialog"),IDI_ICON10); //将树型控件添加到第一页
 	
-	m_pLeft->UpdateWindow(); //更新TabControl
-
-	return 0;
+	m_pLeft->UpdateWindow(); //更新LeftControl
 }
-
 
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParentWnd , CCreateContext* pContext)
 {
@@ -210,18 +214,26 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
 	// TODO: Add your specialized code here and/or call the base class
 
-	//Create splitter window by two views
+	//Create splitter window by two views  用 splitter 把 视图 划分为两块
 	if (!m_wndSplitter.CreateStatic(this, 1, 2))
 		return -1;
 
-	if (!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRightView), CSize(100, 100),pContext) ||
-		!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CCoolTabCtrl), CSize(100, 100),pContext))
+	/*if (!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRightView), CSize(100, 100),pContext) ||
+	!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftCtrl), CSize(100, 100),pContext))
+	{
+	m_wndSplitter.DestroyWindow();
+	return FALSE;
+	}*/
+
+	// 若两个都传进 pContext   List会重复画两遍   所以定义 CCreateContext cc  解决重复问题
+	if (!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRightView), CSize(100, 100),&theApp.cc) ||
+		!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftCtrl), CSize(100, 100),pContext))
 	{
 		m_wndSplitter.DestroyWindow();
 		return FALSE;
 	}
 	m_pRight = reinterpret_cast<CRightView*>(m_wndSplitter.GetPane(0,1));
-	m_pLeft = reinterpret_cast<CCoolTabCtrl*>(m_wndSplitter.GetPane(0,0));
+	m_pLeft = reinterpret_cast<CLeftCtrl*>(m_wndSplitter.GetPane(0,0));
 	m_wndSplitter.SetColumnInfo(0, 200, 100);	
 
 	return CFrameWnd::OnCreateClient(lpcs, pContext);

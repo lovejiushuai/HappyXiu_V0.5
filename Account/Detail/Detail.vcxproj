@@ -114,7 +114,7 @@
     <None Include="res\tree_root.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CoolTabCtrl.cpp" />
+    <ClCompile Include="LeftCtrl.cpp" />
     <ClCompile Include="Detail.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="InfoDialog.cpp" />
@@ -127,7 +127,7 @@
     <ClCompile Include="TabSplitterWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoolTabCtrl.h" />
+    <ClInclude Include="LeftCtrl.h" />
     <ClInclude Include="Detail.h" />
     <ClInclude Include="DetailDll.h" />
     <ClInclude Include="global.h" />
