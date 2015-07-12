@@ -64,7 +64,7 @@ BOOL CInfoDialog::OnInitDialog()
 	// TODO:  Add extra initialization here
 
 	LoadControl();
-	AddToGrid();
+	AddToList();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -216,7 +216,7 @@ void CInfoDialog::ExitConnect()
 	//CoUninitialize();	//退出com库
 }
 
-void CInfoDialog::AddToGrid()
+void CInfoDialog::AddToList()
 {
 	//连接数据库
 	/*OnInitADOConn();*/

@@ -27,7 +27,7 @@ public:
 	virtual BOOL OnInitDialog();
 	void OnInitADOConn();
 	void ExitConnect();
-	void AddToGrid();
+	void AddToList();
 	
 	afx_msg void OnModuleNum();
 	afx_msg void OnSlotNum();
