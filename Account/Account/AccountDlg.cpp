@@ -134,7 +134,7 @@ void CAccountDlg::LoadControl()
 
 	
 	// Create  button.
-	m_hMainButton.Create( _T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( widthRect, topRect, 2*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN);
+	m_hMainButton.Create( _T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( widthRect - 50, topRect, 2*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN);
 
 	m_hLanZhouXiButton.Create(_T("兰州西"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 3*widthRect, topRect, 4*widthRect, topRect + heightRectS), this, IDC_BUTTON_LANZHOUXI);
 
@@ -144,7 +144,7 @@ void CAccountDlg::LoadControl()
 
 	m_hMinButton.Create(_T("民和南"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 9*widthRect, topRect, 10*widthRect, topRect + heightRectS), this, IDC_BUTTON_MIN);
 
-	m_hSpareButton.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect, topRect + heightRectL), this, IDC_BUTTON_SPARE);
+	m_hSpareButton.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect + 50, topRect + heightRectL), this, IDC_BUTTON_SPARE);
 
 	m_hMainButton.EnableWindow(TRUE);
 	m_hLanZhouXiButton.EnableWindow(TRUE);
