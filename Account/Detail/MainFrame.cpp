@@ -104,10 +104,10 @@ void CMainFrame::LoadControl()
 	}
 	
 	// 获取当前屏幕分辨率  -- 但不包括状态栏大小
-	/*int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
-	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);*/
-	int screenwidth=800;
-	int screenheight=600;
+	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
+	/*int screenwidth=800;
+	int screenheight=600;*/
 
 	CRect m_rcPanel;
 	//设置当前窗口大小  与 当前屏幕分辨率 一致

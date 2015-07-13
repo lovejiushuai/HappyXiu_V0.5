@@ -84,173 +84,147 @@ void CRightView::LoadControl()
 
 
 	//插入列的标题
-	m_list.InsertColumn( 0, _T("站名"), LVCFMT_CENTER, 80 );
-	m_list.InsertColumn( 1, _T("模块"), LVCFMT_CENTER, 110 );
+	m_list.InsertColumn( 0, _T("站名"), LVCFMT_CENTER, 120 );
+	m_list.InsertColumn( 1, _T("模块"), LVCFMT_CENTER, 60 );
 
 	CString strSlotNum;
 	strSlotNum.Empty();
 	for (int iSlot = 0; iSlot < 16; iSlot++ )
 	{
 		strSlotNum.Format(_T("槽位%d"),iSlot);
-		m_list.InsertColumn( iSlot + 2 , strSlotNum, LVCFMT_CENTER, 80 );
+		m_list.InsertColumn( iSlot + 2 , strSlotNum, LVCFMT_CENTER, 55 );
 	}
+	OnConnectSQL();
 }
 
 void CRightView::OnConnectSQL()
 {
-	//CString sql;
-	//
-	//m_inquerySQL.Format(_T("allCabinets"));
-	//int index = 0;
-	//try
-	//{
-	//	//按模块、槽位、端口号和描述信息升序排序
-	//	sql.Format(_T("select * from %s order by %s.cabinetName,%s.moduleNum,%s.slotNum asc"), m_inquerySQL, m_listName, m_listName, m_listName);
-	//	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
-	//	_variant_t var;
-	//	while(!theApp.m_pRecordset->adoEOF)
-	//	{
-	//		dataID.Empty();
-	//		moduleNum.Empty();
-	//		slotNum.Empty();
-	//		idataID = 0;
-	//		imoduleNum = 0;
-	//		islotNum = 0;
+	CString sql;
+	CListCtrl& m_list = GetListCtrl();//得到内置的listctrl引用
+	m_inquerySQL.Format(_T("allCabinets"));
+	m_listName.Format(_T("allCabinets"));
+	int index = 0;
+	try
+	{
+		//按模块、槽位、端口号和描述信息升序排序
+		sql.Format(_T("select * from %s order by %s.cabinetName,%s.moduleNum asc"), m_inquerySQL, m_listName, m_listName);
+		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+		_variant_t var;
+		while(!theApp.m_pRecordset->adoEOF)
+		{
+			dataID.Empty();
+			cabinetName.Empty();
+			moduleNum.Empty();
+			slotNum.Empty();
+			int iModuleNum = 0;
+			int iCabinetName = 0;
+			int iSlotNum = 0;
+			
+			
+			/*
+			var = theApp.m_pRecordset->GetCollect("id");
+			if(var.vt != VT_NULL)
+			{				
+			dataID = (char*)(_bstr_t)var;				
+			m_list.InsertItem(index,dataID);
+			}
+			else
+			{
+			m_list.InsertItem(index,dataID);
+			}*/
 
-	//		
-	//		
-	//		var = theApp.m_pRecordset->GetCollect("dataID");
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			dataID = (char*)(_bstr_t)var;				
-	//			m_list.InsertItem(index,dataID);
-	//		}
-	//		else
-	//		{
-	//			m_list.InsertItem(index,dataID);
-	//		}
+			var = theApp.m_pRecordset->GetCollect("cabinetName");
+			if(var.vt != VT_NULL)
+			{
+				iCabinetName = var;				
+				switch( iCabinetName )
+				{
+				case 1:
+					cabinetName.Format(_T("兰新高铁主用主系统"));
+					break;
+				case 2:
+					cabinetName.Format(_T("兰州西"));
+					break;
+				case 3:
+					cabinetName.Format(_T("兰西动车所"));
+					break;
+				case 4:
+					cabinetName.Format(_T("陈家湾"));
+					break;
+				case 5:
+					cabinetName.Format(_T("民和南"));
+					break;
+				case 6:
+					cabinetName.Format(_T("兰新高铁备用主系统"));
+					break;
+				default:
+					cabinetName.Format(_T("other"));
+					break;
+				}
+				/*moduleNum = (char*)(_bstr_t)var;*/
+				/*m_list.SetItemText(index,0,moduleNum);*/
+				m_list.InsertItem(index,cabinetName);
 
+			}
+			else
+			{
+				/*m_list.SetItemText(index,0,moduleNum);*/
+				m_list.InsertItem(index,cabinetName);
+			}
 
-	//		var = theApp.m_pRecordset->GetCollect("moduleNum");
-	//		if(var.vt != VT_NULL)
-	//		{
-	//			imoduleNum = var;				
-	//			switch( imoduleNum )
-	//			{
-	//			case 1:
-	//				moduleNum.Format(_T("模块Ⅰ"));
-	//				break;
-	//			case 2:
-	//				moduleNum.Format(_T("模块Ⅱ"));
-	//				break;
-	//			case 3:
-	//				moduleNum.Format(_T("模块Ⅲ"));
-	//				break;
-	//			default:
-	//				moduleNum.Format(_T("other"));
-	//			}
-	//			/*moduleNum = (char*)(_bstr_t)var;*/
-	//			m_list.SetItemText(index,1,moduleNum);
+			var = theApp.m_pRecordset->GetCollect("moduleNum");
+			if(var.vt != VT_NULL)
+			{
+				iModuleNum = var;				
+				switch( iModuleNum )
+				{
+				case 1:
+					moduleNum.Format(_T("模块Ⅰ"));
+					break;
+				case 2:
+					moduleNum.Format(_T("模块Ⅱ"));
+					break;
+				case 3:
+					moduleNum.Format(_T("模块Ⅲ"));
+					break;
+				default:
+					moduleNum.Format(_T("other"));
+					break;
+				}
+				/*moduleNum = (char*)(_bstr_t)var;*/
+				m_list.SetItemText(index,1,moduleNum);
 
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,1,moduleNum);
-	//		}
+			}
+			else
+			{
+				m_list.SetItemText(index,1,moduleNum);
+			}
 
-	//		var =theApp. m_pRecordset->GetCollect("slotNum");			
-	//		if(var.vt != VT_NULL)
-	//		{
-	//			islotNum = var;
-	//			/*slotNum = (char*)(_bstr_t)var;*/
-	//			slotNum.Format(_T("%d"),islotNum);
-	//			m_list.SetItemText(index,2,slotNum);
+			for ( iSlotNum = 0; iSlotNum <16; iSlotNum++)
+			{
+				slotNum.Format(_T("slot%d"),iSlotNum);
+				var =theApp. m_pRecordset->GetCollect((_variant_t)slotNum);			
+				if(var.vt != VT_NULL)
+				{
+					/*iSlotNum = var;*/
+					slotNum = (char*)(_bstr_t)var;
+					/*slotNum.Format(_T("%d"),iSlotNum);*/
+					m_list.SetItemText(index,iSlotNum + 2,slotNum);
 
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,2,portNum);
-	//		}
-
-	//		var = theApp.m_pRecordset->GetCollect("boardName");			
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			boardName = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,3,boardName);
-
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,3,boardName);
-	//		}
-
-	//		var = theApp.m_pRecordset->GetCollect("portNum");			
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			portNum = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,4,portNum);
-	//			
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,4,portNum);
-	//		}
-
-	//		var= theApp.m_pRecordset->GetCollect("timeSlot");
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			timeSlot = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,5,timeSlot);
-
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,5,timeSlot);
-	//		}
-
-	//		var= theApp.m_pRecordset->GetCollect("deviceNum");
-	//		if(var.vt != VT_NULL)
-	//		{
-	//			deviceNum = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,6,deviceNum);
-
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,6,timeSlot);
-	//		}
-
-	//		var= theApp.m_pRecordset->GetCollect("portType");
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			portType = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,7,portType);
-
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,7,portType);
-	//		}
-
-	//		var= theApp.m_pRecordset->GetCollect("info");
-	//		if(var.vt != VT_NULL)
-	//		{				
-	//			info = (char*)(_bstr_t)var;
-	//			m_list.SetItemText(index,8,info);
-
-	//		}
-	//		else
-	//		{
-	//			m_list.SetItemText(index,8,info);
-	//		}
-	//						
-	//		
-	//		theApp.m_pRecordset->MoveNext();
-	//		index ++;			
-	//	}
-	//}
-	//catch(_com_error &e)
-	//{
-	//	MessageBox(e.Description());
-	//}
+				}
+				else
+				{
+					slotNum.Empty();
+					m_list.SetItemText(index,iSlotNum + 2,slotNum);
+				}
+			}						
+			
+			theApp.m_pRecordset->MoveNext();
+			index ++;			
+		}
+	}
+	catch(_com_error &e)
+	{
+		MessageBox(e.Description());
+	}
 }

@@ -363,7 +363,7 @@ void CInfoDialog::AddToList()
 			}
 			else
 			{
-				m_list.SetItemText(index,2,portNum);
+				m_list.SetItemText(index,2,slotNum);
 			}
 
 			var = theApp.m_pRecordset->GetCollect("boardName");			
