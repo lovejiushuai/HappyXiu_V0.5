@@ -27,7 +27,7 @@ public:
 	_ConnectionPtr m_pConnection;
 	_RecordsetPtr  m_pRecordset;
 	CCreateContext cc;
-
+	bool m_bIsAdmin;
 // Overrides
 public:
 	virtual BOOL InitInstance();
