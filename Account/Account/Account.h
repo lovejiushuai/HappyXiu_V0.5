@@ -27,6 +27,9 @@ public:
 
 	HINSTANCE m_hApptDllInstance;
 
+	_ConnectionPtr m_pConnection;
+	_RecordsetPtr  m_pRecordset;
+
 // Overrides
 public:
 	virtual BOOL InitInstance();

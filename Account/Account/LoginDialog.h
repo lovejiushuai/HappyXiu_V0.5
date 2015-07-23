@@ -1,6 +1,5 @@
 #pragma once
 
-
 // CLoginDialog dialog
 
 class CLoginDialog : public CDialog
@@ -21,8 +20,10 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 
-	CStatic	m_ctrlCue;
-	CString	m_password;
-	CString	m_username;
+	CStatic	m_alertM;
+	CString	m_passWord;
+	CString	m_userName;
+
 	afx_msg void OnBnClickedOk();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

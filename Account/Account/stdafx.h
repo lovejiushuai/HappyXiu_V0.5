@@ -37,7 +37,7 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
-
+#import "c:\program files\common files\system\ado\msado15.dll" no_namespace rename("EOF","EndOfFile")
 
 
 
