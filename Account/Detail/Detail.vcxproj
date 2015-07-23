@@ -119,7 +119,6 @@
     <ClCompile Include="Detail.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="InfoDialog.cpp" />
-    <ClCompile Include="LoginDialog.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="RightView.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -134,7 +133,6 @@
     <ClInclude Include="DetailDll.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="InfoDialog.h" />
-    <ClInclude Include="LoginDialog.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RightView.h" />

@@ -147,6 +147,10 @@ int al_GetSettingString(LPCTSTR sec,LPCTSTR key,LPTSTR defaultString,LPTSTR stri
 	return 0;
 
 }
+int logOnDatabase()
+{
+	return 0;
+}
 int readCharOfLine(char *fileName)
 {
 	char tempBuffer[1024]={0};

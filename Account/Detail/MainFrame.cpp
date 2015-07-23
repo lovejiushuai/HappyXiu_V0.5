@@ -5,7 +5,6 @@
 #include "Detail.h"
 #include "MainFrame.h"
 #include "InfoDialog.h"
-#include "LoginDialog.h"
 
 // CMainFrame
 
@@ -73,16 +72,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CMainFrame::LoadControl()
 {
 		
-	CLoginDialog loginDlg;
-	if(IDOK==loginDlg.DoModal()) // 登录对话框
-	{
-		
-	}
-	else
-	{
-
-	}
-
+	
 #if _WIN32_WINNT > 0x500
 	//保留字（必须为null） ，加载方式 COINIT_MULTITHREADED多线程的方式加载
 	// 以多线程方式打开com通道

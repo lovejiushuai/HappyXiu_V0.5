@@ -6,6 +6,7 @@
 #include "Account.h"
 #include "AccountDlg.h"
 #include "Global.h"
+#include "LoginDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -110,6 +111,16 @@ BOOL CAccountApp::InitInstance()
 
 
 	getAppCurDir(m_exeFullPath);
+
+	CLoginDialog loginDlg;
+	if(IDOK==loginDlg.DoModal()) // µÇÂ¼¶Ô»°¿ò
+	{
+
+	}
+	else
+	{
+		return FALSE;
+	}
 
 	CAccountDlg dlg;
 	m_pMainWnd = &dlg;

@@ -20,4 +20,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+
+	CStatic	m_ctrlCue;
+	CString	m_password;
+	CString	m_username;
+	afx_msg void OnBnClickedOk();
 };
