@@ -66,6 +66,21 @@ BOOL CInfoDialog::OnInitDialog()
 	LoadControl();
 	AddToList();
 	
+	if (theApp.m_bIsAdmin)
+	{
+		m_addButton.EnableWindow(TRUE);
+		m_deleteButton.EnableWindow(TRUE);
+		m_modifyButton.EnableWindow(TRUE);
+		m_clearButton.EnableWindow(TRUE);
+	}
+	else
+	{
+		m_addButton.EnableWindow(FALSE);
+		m_deleteButton.EnableWindow(FALSE);
+		m_modifyButton.EnableWindow(FALSE);
+		m_clearButton.EnableWindow(FALSE);
+	}
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -168,10 +183,10 @@ void CInfoDialog::LoadControl()
 	m_deleteButton.Create(_T("É¾³ý"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 0.57 * screenwidth, 0.85 * screenheight, 0.75 * screenwidth, 0.95 * screenheight), this, IDC_BUTTON_DELETE);
 	m_clearButton.Create(_T("Çå³ý"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 0.82 * screenwidth, 0.85 * screenheight, 0.97 * screenwidth, 0.95 * screenheight), this, IDC_BUTTON_CLEAR);
 
-	m_addButton.EnableWindow(TRUE);
+	/*m_addButton.EnableWindow(TRUE);
 	m_deleteButton.EnableWindow(TRUE);
 	m_modifyButton.EnableWindow(TRUE);
-	m_clearButton.EnableWindow(TRUE);
+	m_clearButton.EnableWindow(TRUE);*/
 
 }
 

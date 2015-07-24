@@ -30,6 +30,7 @@ CAccountApp::CAccountApp()
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 	m_hApptDllInstance = NULL;
+	adminLevel = 0;
 }
 
 
@@ -115,11 +116,11 @@ BOOL CAccountApp::InitInstance()
 	CLoginDialog loginDlg;
 	if(IDOK==loginDlg.DoModal()) // µÇÂ¼¶Ô»°¿ò
 	{
-
+		theApp.adminLevel = 1;
 	}
 	else
 	{
-		return FALSE;
+		theApp.adminLevel = 0;
 	}
 
 	CAccountDlg dlg;

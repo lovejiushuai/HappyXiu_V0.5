@@ -17,4 +17,5 @@ CWinApp * __stdcall afxGetApp(void);
 
 
 int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp);
+int WINAPI SetAdmin(int admin);
 

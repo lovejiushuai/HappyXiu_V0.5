@@ -342,10 +342,15 @@ LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 	LaunchDllFunc = (LaunchDllFuncAPI)GetProcAddress(hDllLibrary, "StartDll");
+	SetAdminFunc = (SetAdminFuncAPI)GetProcAddress(hDllLibrary, "SetAdmin");
 	ASSERT(LaunchDllFunc);
 	if(!LaunchDllFunc)
 		return 0;
 	ShowWindow(SW_HIDE);
+	ASSERT(SetAdminFunc);
+	if(!SetAdminFunc)
+		return 0;
+	SetAdminFunc(theApp.adminLevel);
 	// m_hApptDllInstance is HINSTANCE of Account
 	LaunchDllFunc(GetSafeHwnd(),
 		pApp->m_hApptDllInstance,

@@ -120,6 +120,8 @@ void CLoginDialog::OnBnClickedOk()
 				}
 				else
 				{
+					//设置用户等级供后面DLL判断修改使用
+					theApp.adminLevel = 1;
 					CLoginDialog::OnOK();
 				}
 			}
@@ -141,6 +143,7 @@ void CLoginDialog::OnBnClickedOk()
 	if(inCount>=4)
 	{
 		inCount=0;
+		theApp.adminLevel = 0;
 		CLoginDialog::OnCancel();
 	}
 	else if(inCount==3)

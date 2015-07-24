@@ -69,6 +69,20 @@ int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 
 	return 1;
 }
+int WINAPI SetAdmin(int admin)
+{
+	int tempAdmin;
+	tempAdmin = admin;
+	if(tempAdmin)
+	{
+		theApp.m_bIsAdmin = true;
+	}
+	else
+	{
+		theApp.m_bIsAdmin = false;
+	}
+	return 1;
+}
 
 void getAppCurDir(TCHAR *curDir)
 {

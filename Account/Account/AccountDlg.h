@@ -9,6 +9,7 @@
 //typedef int (WINAPI* LaunchDllEntryFuncAPI)(HWND,HINSTANCE &,CWinApp** ,CString);
 // Don't pass CString, It's ok for CString &
 typedef int (WINAPI* LaunchDllFuncAPI)(HWND,HINSTANCE &,CWinApp**);
+typedef int (WINAPI* SetAdminFuncAPI)(int);
 
 // CAccountDlg dialog
 class CAccountDlg : public CDialogEx
@@ -50,6 +51,7 @@ protected:
 	int lineY_1,lineY_2;
 
 	LaunchDllFuncAPI LaunchDllFunc;
+	SetAdminFuncAPI SetAdminFunc;
 	LRESULT ExitDLLMessage(WPARAM wParam,LPARAM lParam);
 
 
