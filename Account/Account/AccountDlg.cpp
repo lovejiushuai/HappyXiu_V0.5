@@ -334,7 +334,6 @@ LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 	HINSTANCE  hDllLibrary = NULL;
 	CString dllStr = _T("Detail.dll");
 
-
 	pApp->m_hApptDllInstance = LoadLibrary(dllStr); 
 	hDllLibrary = pApp->m_hApptDllInstance;
 	if(!hDllLibrary)
@@ -347,10 +346,11 @@ LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 	if(!LaunchDllFunc)
 		return 0;
 	ShowWindow(SW_HIDE);
-	// m_hInstPhoneLib is HINSTANCE of AnwMobile
+	// m_hApptDllInstance is HINSTANCE of Account
 	LaunchDllFunc(GetSafeHwnd(),
 		pApp->m_hApptDllInstance,
 		&pDllEntryWinApp);
+	
 	ExitDLLMessage(0,0);
 	return 1L;
 }
