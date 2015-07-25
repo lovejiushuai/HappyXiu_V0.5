@@ -36,6 +36,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_NOTIFY(NM_DBLCLK, 100, OnDblclkTree)
 	ON_WM_DESTROY()
+	ON_COMMAND(ID_ADD_USER, OnAddUser)
+	ON_COMMAND(ID_EDIT_USER, OnChangePassword)
 END_MESSAGE_MAP()
 
 BEGIN_DISPATCH_MAP(CMainFrame, CFrameWnd)
@@ -362,4 +364,11 @@ void CMainFrame::OnDestroy()
 
 	//CoUninitialize();	//ÍË³öcom¿â
 }
+void CMainFrame::OnAddUser()
+{
 
+}
+void CMainFrame::OnChangePassword()
+{
+
+}

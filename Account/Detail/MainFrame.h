@@ -38,6 +38,8 @@ protected:
 		
 	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 	afx_msg void OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnAddUser();
+	afx_msg void OnChangePassword();
 
 	void LoadControl();
 
