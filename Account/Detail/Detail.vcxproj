@@ -127,6 +127,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TabSplitterWnd.cpp" />
+    <ClCompile Include="UserDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LeftCtrl.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TabSplitterWnd.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UserDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Detail.rc" />
