@@ -370,5 +370,12 @@ void CMainFrame::OnAddUser()
 }
 void CMainFrame::OnChangePassword()
 {
+	if (theApp.m_userID)
+	{
 
+	}
+	else
+	{
+		return;
+	}
 }

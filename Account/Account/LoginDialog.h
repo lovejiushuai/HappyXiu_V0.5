@@ -23,6 +23,7 @@ public:
 	CStatic	m_alertM;
 	CString	m_passWord;
 	CString	m_userName;
+	int m_userID;
 
 	afx_msg void OnBnClickedOk();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

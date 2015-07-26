@@ -350,7 +350,15 @@ LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 	ASSERT(SetAdminFunc);
 	if(!SetAdminFunc)
 		return 0;
-	SetAdminFunc(theApp.adminLevel);
+	if (theApp.adminLevel)
+	{
+		SetAdminFunc(theApp.m_userID);
+	}
+	else
+	{
+
+	}
+	
 	// m_hApptDllInstance is HINSTANCE of Account
 	LaunchDllFunc(GetSafeHwnd(),
 		pApp->m_hApptDllInstance,

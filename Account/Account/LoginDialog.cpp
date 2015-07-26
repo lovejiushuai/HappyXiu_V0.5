@@ -104,13 +104,33 @@ void CLoginDialog::OnBnClickedOk()
 	{	
 		try
 		{
-			CString sql,passWord;
+			CString sql,passWord,userID;
+			_variant_t var;
 			sql.Format(_T("select * from login where userName='%s'"),m_userName);
 			theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			if(!theApp.m_pRecordset->EndOfFile)
 			{
 				passWord=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("passWord");
 				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("level");
+				var = theApp.m_pRecordset->GetCollect("id");
+				if(var.vt != VT_NULL)
+				{				
+					userID = (char*)(_bstr_t)var;
+					m_userID = _ttoi(userID);
+					if (m_userID > 0)
+					{
+						theApp.m_userID = m_userID;
+					}
+					else
+					{
+						m_alertM.SetWindowText(_T("提示:UserID,小于0!"));
+					}
+				}
+				else
+				{
+					
+				}
+
 				if(passWord!=m_passWord)
 				{
 					m_alertM.SetWindowText(_T("提示:密码错误,请重新输入!"));

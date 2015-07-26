@@ -69,17 +69,19 @@ int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 
 	return 1;
 }
-int WINAPI SetAdmin(int admin)
+int WINAPI SetAdmin(int userID)
 {
 	int tempAdmin;
-	tempAdmin = admin;
+	tempAdmin = userID;
 	if(tempAdmin)
 	{
 		theApp.m_bIsAdmin = true;
+		theApp.m_userID = tempAdmin;
 	}
 	else
 	{
 		theApp.m_bIsAdmin = false;
+		theApp.m_userID = 0;
 	}
 	return 1;
 }

@@ -30,6 +30,7 @@ public:
 	_ConnectionPtr m_pConnection;
 	_RecordsetPtr  m_pRecordset;
 	int adminLevel;
+	int m_userID;
 // Overrides
 public:
 	virtual BOOL InitInstance();

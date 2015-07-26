@@ -28,6 +28,7 @@ public:
 	_RecordsetPtr  m_pRecordset;
 	CCreateContext cc;
 	bool m_bIsAdmin;
+	int m_userID;
 // Overrides
 public:
 	virtual BOOL InitInstance();

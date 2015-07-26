@@ -48,6 +48,7 @@ CDetailApp::CDetailApp()
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 	m_bIsAdmin = false;
+	m_userID = 0;
 }
 
 
