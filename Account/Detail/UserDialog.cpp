@@ -32,6 +32,8 @@ void CUserDialog::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CUserDialog, CDialog)
+	ON_BN_CLICKED( IDC_BUTTON_SUBMIT, OnBnClickedOk)
+	ON_BN_CLICKED( IDC_BUTTON_CANCEL, OnBnClickedOk)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
