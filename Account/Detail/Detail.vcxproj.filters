@@ -73,6 +73,9 @@
     <None Include="res\background.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\background_change.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Detail.cpp">

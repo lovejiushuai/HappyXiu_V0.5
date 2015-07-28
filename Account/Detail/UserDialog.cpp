@@ -6,7 +6,6 @@
 #include "UserDialog.h"
 #include "afxdialogex.h"
 
-
 // CUserDialog dialog
 
 IMPLEMENT_DYNAMIC(CUserDialog, CDialog)
@@ -26,14 +25,13 @@ CUserDialog::~CUserDialog()
 void CUserDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_ALERT, m_alertM);
+	/*DDX_Control(pDX, IDC_ALERT, m_alertM);
 	DDX_Text(pDX, IDC_EDIT_PASSWORD, m_passWord);
-	DDX_CBString(pDX, IDC_EDIT_USERNAME, m_userName);
+	DDX_Text(pDX, IDC_COMFIRM_PASSWORD, m_passWordConfirm);*/
 }
 
 
 BEGIN_MESSAGE_MAP(CUserDialog, CDialog)
-	ON_BN_CLICKED(IDOK, &CUserDialog::OnBnClickedOk)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -46,11 +44,49 @@ BOOL CUserDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
-
+	
+	LoadControl();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
+BOOL CUserDialog::LoadControl()
+{
+	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
+	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
+	/*int screenwidth=800;
+	int screenheight=600;*/
+	
+	m_Font.CreateFont(30,
+		0,
+		0,
+		0,
+		700,
+		FALSE,
+		FALSE,
+		0,
+		ANSI_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		FF_SWISS,
+		_T("楷体")); 
+	
+	
+	m_rcPanel.SetRect(screenwidth/2 - 340,screenheight/2 - 220,screenwidth/2 + 347,screenheight/2 + 220);
+	MoveWindow(&m_rcPanel);
+
+	m_alertM.Create(_T("请输入修改后的密码："),WS_CHILD|WS_VISIBLE|WS_EX_TRANSPARENT,CRect(70,60,500,100),this,IDC_ALERT);	
+	GetDlgItem(IDC_ALERT)->SetFont(&m_Font);
+
+	m_editPW.Create(WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_PASSWORD,CRect(80,180,220,210), this, IDC_EDIT_PASSWORD);
+	m_editPWConfirm.Create(WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_PASSWORD,CRect(450,180,590,210), this, IDC_EDIT_PASSWORD);
+
+	// Create  button.
+	m_buttonSubmit.Create( _T("提交"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 70, 380, 145, 405), this, IDC_BUTTON_SUBMIT);
+	m_buttonCancel.Create( _T("取消"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 160, 380, 235, 405), this, IDC_BUTTON_CANCEL);
+	return TRUE;
+}
 
 void CUserDialog::OnBnClickedOk()
 {
@@ -154,6 +190,17 @@ HBRUSH CUserDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		pDC->SetTextColor(RGB(255,0,0));
 		pDC->SetBkMode(TRANSPARENT);
+		return (HBRUSH)::GetStockObject(NULL_BRUSH);
+	}
+	if(pWnd->GetDlgCtrlID() == IDC_BUTTON_SUBMIT)
+	{		
+		pDC->SetBkMode(TRANSPARENT);
+		return (HBRUSH)::GetStockObject(NULL_BRUSH);
+	}
+	if(pWnd->GetDlgCtrlID() == IDC_BUTTON_CANCEL)
+	{
+		pDC->SetBkMode(TRANSPARENT);
+		return (HBRUSH)::GetStockObject(NULL_BRUSH);
 	}
 
 	// TODO:  Return a different brush if the default is not desired

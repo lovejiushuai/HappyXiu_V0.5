@@ -97,6 +97,7 @@
     <None Include="Detail.def" />
     <None Include="ReadMe.txt" />
     <None Include="res\background.bmp" />
+    <None Include="res\background_change.bmp" />
     <None Include="res\bar1.ico" />
     <None Include="res\Detail.rc2" />
     <None Include="res\ico00010.ico" />

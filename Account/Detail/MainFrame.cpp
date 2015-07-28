@@ -5,6 +5,7 @@
 #include "Detail.h"
 #include "MainFrame.h"
 #include "InfoDialog.h"
+#include "UserDialog.h"
 
 // CMainFrame
 
@@ -372,7 +373,16 @@ void CMainFrame::OnChangePassword()
 {
 	if (theApp.m_userID)
 	{
-
+		CUserDialog userDlg;
+		
+		if(IDOK==userDlg.DoModal()) // µÇÂ¼¶Ô»°¿ò
+		{
+			
+		}
+		else
+		{
+			return;
+		}
 	}
 	else
 	{
