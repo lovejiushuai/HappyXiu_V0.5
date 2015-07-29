@@ -78,11 +78,11 @@ BOOL CUserDialog::LoadControl()
 	m_rcPanel.SetRect(screenwidth/2 - 340,screenheight/2 - 220,screenwidth/2 + 347,screenheight/2 + 220);
 	MoveWindow(&m_rcPanel);
 
-	m_alertM.Create(_T("请输入修改后的密码："),WS_CHILD|WS_VISIBLE|WS_EX_TRANSPARENT,CRect(70,60,500,100),this,IDC_ALERT);	
+	m_alertM.Create(_T("请输入修改后的密码："),WS_CHILD|WS_VISIBLE|WS_EX_TRANSPARENT,CRect(70,40,500,80),this,IDC_ALERT);	
 	GetDlgItem(IDC_ALERT)->SetFont(&m_Font);
 
 	m_editPW.Create(WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_PASSWORD,CRect(80,180,220,210), this, IDC_EDIT_PASSWORD);
-	m_editPWConfirm.Create(WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_PASSWORD,CRect(450,180,590,210), this, IDC_EDIT_PASSWORD);
+	m_editPWConfirm.Create(WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_PASSWORD,CRect(450,180,590,210), this, IDC_COMFIRM_PASSWORD);
 
 	// Create  button.
 	m_buttonSubmit.Create( _T("提交"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 70, 380, 145, 405), this, IDC_BUTTON_SUBMIT);
@@ -97,24 +97,39 @@ void CUserDialog::OnBnClickedOk()
 	UpdateData();
 	static int inCount=0;
 
+	m_userID = theApp.m_userID;
+	GetDlgItemText(IDC_EDIT_PASSWORD, m_passWord);
+	GetDlgItemText(IDC_COMFIRM_PASSWORD, m_passWordConfirm);
+
+
 	++inCount;
-	if(m_userName.IsEmpty()||m_passWord.IsEmpty())
+	if(m_passWord.IsEmpty()||m_passWordConfirm.IsEmpty())
 	{
 		m_alertM.SetWindowText(_T("提示:用户名或密码不能为空!"));
 	}
 	else
 	{	
+		if (m_passWord != m_passWordConfirm)
+		{
+			m_alertM.SetWindowText(_T("提示:密码!"));
+			return;
+		}
+
+				
 		try
 		{
-			CString sql,passWord,userID;
+			CString sql,passWord,userID,userName;
 			_variant_t var;
-			sql.Format(_T("select * from User where userName='%s'"),m_userName);
+			CString m_listName;
+			m_listName.Format(_T("userData"));
+
+			sql.Format(_T("select * from userData where userID=%d "),m_userID);
 			theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			if(!theApp.m_pRecordset->adoEOF)
 			{
-				passWord=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("passWord");
-				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("level");
-				var = theApp.m_pRecordset->GetCollect("id");
+				userName=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("userName");
+				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("uLevel");
+				var = theApp.m_pRecordset->GetCollect("userID");
 				if(var.vt != VT_NULL)
 				{				
 					userID = (char*)(_bstr_t)var;
@@ -130,29 +145,22 @@ void CUserDialog::OnBnClickedOk()
 				}
 				else
 				{
-					
-				}
 
-				if(passWord!=m_passWord)
-				{
-					m_alertM.SetWindowText(_T("提示:密码错误,请重新输入!"));
-					GetDlgItem(IDC_EDIT_PASSWORD)->SetFocus();
-					m_passWord.Format(_T(""));
-					UpdateData(false);
-				}
-				else
-				{
-					//设置用户等级供后面DLL判断修改使用
-					CUserDialog::OnOK();
 				}
 			}
-			else
+			m_userName.Format(_T("%s"),userName);
+
+			sql.Format(_T("update %s set uPassword = '%s' where userID = %d and userName = '%s'"), m_listName, m_passWord, m_userID,m_userName);
+			try
 			{
-				m_alertM.SetWindowText(_T("提示:对不起,没有此用户!"));
-				GetDlgItem(IDC_EDIT_USERNAME)->SetFocus();
-				m_userName.Format(_T(""));
-				UpdateData(false);
+				theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
+				MessageBox(_T("修改成功."),_T("提示"));
+				OnOK();
 			}
+			catch(_com_error &e)
+			{
+				MessageBox(e.Description());
+			}			
 		}
 		catch (_com_error &e)
 		{

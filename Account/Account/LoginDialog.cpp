@@ -106,13 +106,13 @@ void CLoginDialog::OnBnClickedOk()
 		{
 			CString sql,passWord,userID;
 			_variant_t var;
-			sql.Format(_T("select * from login where userName='%s'"),m_userName);
+			sql.Format(_T("select * from userData where userName='%s'"),m_userName);
 			theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			if(!theApp.m_pRecordset->EndOfFile)
 			{
-				passWord=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("passWord");
-				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("level");
-				var = theApp.m_pRecordset->GetCollect("id");
+				passWord=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("uPassword");
+				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("uLevel");
+				var = theApp.m_pRecordset->GetCollect("userID");
 				if(var.vt != VT_NULL)
 				{				
 					userID = (char*)(_bstr_t)var;
