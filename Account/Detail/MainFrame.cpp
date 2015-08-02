@@ -74,7 +74,17 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CMainFrame::LoadControl()
 {
-		
+
+	if (theApp.m_userID)
+	{ 
+	}
+	else
+	{
+		// 不是管理用户登录 隐藏菜单栏
+		CWnd *pWnd=AfxGetMainWnd();  
+		pWnd->SetMenu(NULL);  
+		pWnd->DrawMenuBar();
+	}
 	
 #if _WIN32_WINNT > 0x500
 	//保留字（必须为null） ，加载方式 COINIT_MULTITHREADED多线程的方式加载
@@ -367,6 +377,23 @@ void CMainFrame::OnDestroy()
 }
 void CMainFrame::OnAddUser()
 {
+	if (theApp.m_userID)
+	{
+		CUserDialog userDlg;
+		userDlg.m_bIsAddUser = true;
+		if(IDOK==userDlg.DoModal()) // 登录对话框
+		{
+
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
 
 }
 void CMainFrame::OnChangePassword()
@@ -374,7 +401,7 @@ void CMainFrame::OnChangePassword()
 	if (theApp.m_userID)
 	{
 		CUserDialog userDlg;
-		
+		userDlg.m_bIsAddUser = false;
 		if(IDOK==userDlg.DoModal()) // 登录对话框
 		{
 			

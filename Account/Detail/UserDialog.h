@@ -19,8 +19,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	bool m_bIsAddUser;
 
 	CStatic	m_alertM;
+	CStatic	m_alertName;
 	CString	m_passWord;
 	CString	m_passWordConfirm;
 	CString	m_userName;
@@ -28,6 +30,7 @@ public:
 	CRect m_rcPanel;
 	CFont m_Font;
 
+	CEdit m_editName;
 	CEdit m_editPW;
 	CEdit m_editPWConfirm;
 	CButton m_buttonSubmit;
@@ -37,4 +40,6 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 
 	BOOL LoadControl();	
+//	afx_msg void OnPaint();
+	virtual void OnCancel();
 };
