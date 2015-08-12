@@ -16,6 +16,7 @@ CLoginDialog::CLoginDialog(CWnd* pParent /*=NULL*/)
 {
 	m_passWord = _T("");
 	m_userName = _T("");
+	m_bIsUser = false;
 }
 
 CLoginDialog::~CLoginDialog()
@@ -40,6 +41,8 @@ void CLoginDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CLoginDialog, CDialog)
 	ON_BN_CLICKED(IDOK, &CLoginDialog::OnBnClickedOk)
 	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDCANCEL, &CLoginDialog::OnBnClickedCancel)
+	ON_BN_CLICKED(IDNOMAL, &CLoginDialog::OnBnClickedNomal)
 END_MESSAGE_MAP()
 
 
@@ -196,4 +199,20 @@ HBRUSH CLoginDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 	// TODO:  Return a different brush if the default is not desired
 	return hbr;
+}
+
+
+void CLoginDialog::OnBnClickedCancel()
+{
+	// TODO: Add your control notification handler code here
+	
+	CDialog::OnCancel();
+}
+
+
+void CLoginDialog::OnBnClickedNomal()
+{
+	// TODO: Add your control notification handler code here
+	m_bIsUser = true;
+	CDialog::OnCancel();
 }

@@ -24,7 +24,10 @@ public:
 	CString	m_passWord;
 	CString	m_userName;
 	int m_userID;
+	bool m_bIsUser;
 
 	afx_msg void OnBnClickedOk();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnBnClickedCancel();
+	afx_msg void OnBnClickedNomal();
 };

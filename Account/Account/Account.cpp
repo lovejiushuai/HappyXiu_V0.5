@@ -120,6 +120,13 @@ BOOL CAccountApp::InitInstance()
 	}
 	else
 	{
+		if (loginDlg.m_bIsUser)
+		{
+		}
+		else
+		{
+			return FALSE;
+		}
 		theApp.adminLevel = 0;
 	}
 
