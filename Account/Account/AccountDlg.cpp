@@ -48,7 +48,7 @@ END_MESSAGE_MAP()
 
 
 
-
+// 站点联系对话框 初始化参数
 CAccountDlg::CAccountDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CAccountDlg::IDD, pParent)
 {
@@ -56,11 +56,13 @@ CAccountDlg::CAccountDlg(CWnd* pParent /*=NULL*/)
 	m_buttonCount = 0;
 }
 
+// 参数与控件关联
 void CAccountDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
+// 消息映射  消息值、按钮 与响应函数 关联
 BEGIN_MESSAGE_MAP(CAccountDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
@@ -77,7 +79,7 @@ END_MESSAGE_MAP()
 
 
 // CAccountDlg message handlers
-
+// 初始化窗口
 BOOL CAccountDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -88,6 +90,7 @@ BOOL CAccountDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
+	// 进行一些按钮 连线的布局
 	LoadControl();
 
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
@@ -114,13 +117,16 @@ BOOL CAccountDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
+// 初始化时  屏幕大小 按钮 连线的创建和布局
 void CAccountDlg::LoadControl()
 {
+	// 获取当前屏幕大小
 	int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
 	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);
 	/*int screenwidth=800;
 	int screenheight=600;*/
 	
+	// 设置当前窗口的大小
 	m_rcPanel.SetRect(0,0,screenwidth,screenheight);
 	MoveWindow(&m_rcPanel);
 
@@ -132,7 +138,7 @@ void CAccountDlg::LoadControl()
 	heightRectS = m_rcPanel.Height()*3/10;
 	topRect = m_rcPanel.Height()/10;
 
-	
+	// 创建 站点 按键 并进行初始化
 	// Create  button.
 	m_hMainButton.Create( _T("兰新高铁主用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( widthRect - 50, topRect, 2*widthRect, topRect + heightRectL), this, IDC_BUTTON_MAIN);
 
@@ -146,6 +152,7 @@ void CAccountDlg::LoadControl()
 
 	m_hSpareButton.Create(_T("兰新高铁备用主系统"), WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON, CRect( 11*widthRect, topRect, 12*widthRect + 50, topRect + heightRectL), this, IDC_BUTTON_SPARE);
 
+	// 把按键设置为屏幕可见   若不设置  则可能在窗口中看不到
 	m_hMainButton.EnableWindow(TRUE);
 	m_hLanZhouXiButton.EnableWindow(TRUE);
 	m_hLanXiDButton.EnableWindow(TRUE);
@@ -219,6 +226,7 @@ void CAccountDlg::LoadControl()
 
 }
 
+// 响应系统命令  自动生成  不用管
 void CAccountDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
@@ -236,6 +244,7 @@ void CAccountDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
+// 每次屏幕移动  或者最小化 然后最大化时  就会调用此函数  在 屏幕上 重新画当前窗口 及 窗口中每个控件
 void CAccountDlg::OnPaint()
 {
 	//if (IsIconic())
@@ -279,12 +288,16 @@ void CAccountDlg::OnPaint()
 	//	CDialogEx::OnPaint();
 	//}
 
+	// 获取画笔 
 	CPaintDC dc(this); // device context for painting
 		
+	// 画笔 移动到点    
 	dc.MoveTo( widthRect, lineY_1);
+	// 画笔 画到点
 	dc.LineTo( 12*widthRect, lineY_1);	
-
+	// 画笔 移动到点
 	dc.MoveTo( 2*widthRect, lineY_2);
+	// 画笔 画到点
 	dc.LineTo( 12*widthRect, lineY_2);
 
 }
@@ -293,54 +306,67 @@ void CAccountDlg::OnPaint()
 //  the minimized window.
 HCURSOR CAccountDlg::OnQueryDragIcon()
 {
+	// 自动生成  不用管
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+// 点击 main 按键 事件响应
 void CAccountDlg::OnButtonClickedMain()
 {
+	// 发送 启动dll 消息
 	/*AfxMessageBox(_T("Main"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
+
+// 点击 备用 按键 事件响应
 void CAccountDlg::OnButtonClickedSpare()
 {
 	/*AfxMessageBox(_T("Spare"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
 
+// 点击 兰州西 按键 事件响应
 void CAccountDlg::OnButtonClickedLZX()
 {
 	/*AfxMessageBox(_T("LanZhouXi"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
+// 点击 兰西动车所 按键 事件响应
 void CAccountDlg::OnButtonClickedLXD()
 {
 	/*AfxMessageBox(_T("LanXiDong"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
+// 点击 陈家湾 按键 事件响应
 void CAccountDlg::OnButtonClickedC()
 {
 	/*AfxMessageBox(_T("Chen"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
+// 点击 民和南 按键 事件响应
 void CAccountDlg::OnButtonClickedM()
 {
 	/*AfxMessageBox(_T("Min"));*/
 	PostMessage(WM_START_DLL, 0, 0);
 }
 
+// 启动dll 函数执行
 LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 {
 	CAccountApp* pApp = (CAccountApp*)AfxGetApp();
 	HINSTANCE  hDllLibrary = NULL;
 	CString dllStr = _T("Detail.dll");
 
+	// 加载 dll 库
 	pApp->m_hApptDllInstance = LoadLibrary(dllStr); 
 	hDllLibrary = pApp->m_hApptDllInstance;
 	if(!hDllLibrary)
 	{
+		// 若加载失败 则提示信息
 		TRACE(_T("LoadLibrary Failed, Error=%d: %s"), GetLastError(), dllStr);
 		return 0;
 	}
+	//加载成功后  把dll 中 接口 进行初始化  以便后面调用
 	LaunchDllFunc = (LaunchDllFuncAPI)GetProcAddress(hDllLibrary, "StartDll");
 	SetAdminFunc = (SetAdminFuncAPI)GetProcAddress(hDllLibrary, "SetAdmin");
 	ASSERT(LaunchDllFunc);
@@ -359,15 +385,18 @@ LRESULT  CAccountDlg::LaunchDll(WPARAM wParam, LPARAM lParam)
 
 	}
 	
+	// 启动dll 对应函数接口
 	// m_hApptDllInstance is HINSTANCE of Account
 	LaunchDllFunc(GetSafeHwnd(),
 		pApp->m_hApptDllInstance,
 		&pDllEntryWinApp);
 	
+	//释放加载库
 	ExitDLLMessage(0,0);
 	return 1L;
 }
 
+// 退出时  把 加载库进行释放
 LRESULT CAccountDlg::ExitDLLMessage(WPARAM wParam,LPARAM lParam)
 {
 	ShowWindow(SW_SHOW);

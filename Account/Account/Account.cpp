@@ -22,6 +22,7 @@ END_MESSAGE_MAP()
 
 // CAccountApp construction
 
+// 程序主线程  初始化参数
 CAccountApp::CAccountApp()
 {
 	// support Restart Manager
@@ -33,7 +34,7 @@ CAccountApp::CAccountApp()
 	adminLevel = 0;
 }
 
-
+//定义全局变量 theApp  整个工程只要包含 App头文件都可以访问
 // The one and only CAccountApp object
 
 CAccountApp theApp;
@@ -74,6 +75,7 @@ BOOL CAccountApp::InitInstance()
 
 	HANDLE hEvent;
 	UINT   cTries = 0;
+	// 创建一个名字事件   避免启动多个程序 
 	// Create a named event
 	hEvent = CreateEvent(NULL, TRUE, FALSE, _T("兰新高铁网管台帐"));
 	if (hEvent != NULL)
@@ -110,9 +112,10 @@ BOOL CAccountApp::InitInstance()
 		}
 	}
 
-
+	// 获取当前exe运行路径，先不用管他  目前没用
 	getAppCurDir(m_exeFullPath);
 
+	// 登录对话框  若不想验证  可直接屏蔽掉
 	CLoginDialog loginDlg;
 	if(IDOK==loginDlg.DoModal()) // 登录对话框
 	{
@@ -130,6 +133,8 @@ BOOL CAccountApp::InitInstance()
 		theApp.adminLevel = 0;
 	}
 
+
+	// 各站点对话框 
 	CAccountDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();

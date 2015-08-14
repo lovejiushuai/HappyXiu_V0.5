@@ -11,6 +11,7 @@
 
 IMPLEMENT_DYNAMIC(CLoginDialog, CDialog)
 
+//初始化参数
 CLoginDialog::CLoginDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CLoginDialog::IDD, pParent)
 {
@@ -19,6 +20,7 @@ CLoginDialog::CLoginDialog(CWnd* pParent /*=NULL*/)
 	m_bIsUser = false;
 }
 
+//窗口销毁  析构函数
 CLoginDialog::~CLoginDialog()
 {
 	if (theApp.m_pRecordset)
@@ -29,6 +31,7 @@ CLoginDialog::~CLoginDialog()
 	CoUninitialize();//清除COM环境
 }
 
+//定义参数 与 控件关联  数据交换
 void CLoginDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -37,7 +40,7 @@ void CLoginDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_CBString(pDX, IDC_EDIT_USERNAME, m_userName);
 }
 
-
+//消息映射   按钮ID 消息ID 与 响应函数一一对应
 BEGIN_MESSAGE_MAP(CLoginDialog, CDialog)
 	ON_BN_CLICKED(IDOK, &CLoginDialog::OnBnClickedOk)
 	ON_WM_CTLCOLOR()
@@ -48,7 +51,7 @@ END_MESSAGE_MAP()
 
 // CLoginDialog message handlers
 
-
+// 窗口初始化
 BOOL CLoginDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -59,7 +62,7 @@ BOOL CLoginDialog::OnInitDialog()
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-
+// 登录按键  响应
 void CLoginDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
@@ -89,6 +92,7 @@ void CLoginDialog::OnBnClickedOk()
 	}
 	catch(_com_error e)
 	{
+		// 若连接失败  就弹出消息框  提示失败消息
 		CString str;
 		str.Format(_T("连接数据库失败:%s"),e.ErrorMessage());
 		::MessageBox(NULL,str,_T("提示信息"),NULL);
@@ -99,6 +103,7 @@ void CLoginDialog::OnBnClickedOk()
 	static int inCount=0;
 
 	++inCount;
+	//检测名字和密码是否为空
 	if(m_userName.IsEmpty()||m_passWord.IsEmpty())
 	{
 		m_alertM.SetWindowText(_T("提示:用户名或密码不能为空!"));
@@ -107,12 +112,14 @@ void CLoginDialog::OnBnClickedOk()
 	{	
 		try
 		{
+			// 查询数据库userData 表中  是否存在 指定的 userName
 			CString sql,passWord,userID;
 			_variant_t var;
 			sql.Format(_T("select * from userData where userName='%s'"),m_userName);
 			theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 			if(!theApp.m_pRecordset->EndOfFile)
 			{
+				// 若存在指定 用户名   则取出指定用户名的 密码 uPassword 项
 				passWord=(char*)(_bstr_t)theApp.m_pRecordset->GetCollect("uPassword");
 				//levelIn=(char*)(_bstr_t)m_rec->GetCollect("uLevel");
 				var = theApp.m_pRecordset->GetCollect("userID");
@@ -134,6 +141,7 @@ void CLoginDialog::OnBnClickedOk()
 					
 				}
 
+				// 进行密码比对 若不一致则进行 静态文本提醒
 				if(passWord!=m_passWord)
 				{
 					m_alertM.SetWindowText(_T("提示:密码错误,请重新输入!"));
@@ -201,7 +209,7 @@ HBRUSH CLoginDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return hbr;
 }
 
-
+// 若点击对话框 关闭按钮  则相应此函数
 void CLoginDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
@@ -209,7 +217,7 @@ void CLoginDialog::OnBnClickedCancel()
 	CDialog::OnCancel();
 }
 
-
+// 若点击对话框中  普通登录  则相应此函数
 void CLoginDialog::OnBnClickedNomal()
 {
 	// TODO: Add your control notification handler code here
