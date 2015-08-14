@@ -11,6 +11,7 @@
 
 IMPLEMENT_DYNAMIC(CInfoDialog, CDialog)
 
+// 详细信息 窗口（三级界面）  初始化参数
 CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CInfoDialog::IDD, pParent)
 {	
@@ -32,17 +33,19 @@ CInfoDialog::CInfoDialog(CWnd* pParent /*=NULL*/)
 	islotNum = 0;
 }
 
+// 析构函数
 CInfoDialog::~CInfoDialog()
 {
 }
 
+// 把 列表 和 ID 关联  当list改变时 会调用此部分
 void CInfoDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST, m_list);	
 }
 
-
+// 消息映射  把按钮、消息  和 实现功能函数 关联
 BEGIN_MESSAGE_MAP(CInfoDialog, CDialog)
 	ON_NOTIFY(NM_CLICK, IDC_LIST, OnClickList)
 	ON_BN_CLICKED( IDC_BUTTON_ADD, OnAddData)
@@ -56,16 +59,18 @@ END_MESSAGE_MAP()
 
 // CInfoDialog message handlers
 
-
+// 窗口初始化
 BOOL CInfoDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
 
+	// 加载 信息 如：按钮 编辑框 列表
 	LoadControl();
 	AddToList();
 	
+	//检测是否是管理员  如果不是 则把 按钮 设置为不可点击
 	if (theApp.m_bIsAdmin)
 	{
 		m_addButton.EnableWindow(TRUE);
@@ -85,12 +90,14 @@ BOOL CInfoDialog::OnInitDialog()
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
+// 加载函数   实现屏幕、按钮初始化
 void CInfoDialog::LoadControl()
 {
 	// 获取当前屏幕分辨率  -- 但不包括状态栏大小
 	/*int screenwidth=GetSystemMetrics(SM_CXFULLSCREEN);
 	int screenheight=GetSystemMetrics(SM_CYFULLSCREEN);*/
 
+	// 设置窗口大小
 	int screenwidth=800;
 	int screenheight=600;
 
@@ -119,6 +126,7 @@ void CInfoDialog::LoadControl()
 		pwnd = NULL;
 	}
 	
+	//设置 创建静态文本  
 	dataIDText.Create(_T("编号："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.6 * screenwidth, 0.42 * screenheight, 0.98 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_DATAID);
 	moduleNumText.Create(_T("模块："),WS_CHILD|WS_VISIBLE|SS_LEFT, CRect(0.1 * screenwidth, 0.42* screenheight, 0.2 * screenwidth, 0.47 * screenheight), this, IDC_TEXT_MODNUM);
 
@@ -190,6 +198,7 @@ void CInfoDialog::LoadControl()
 
 }
 
+// 初始化 连接数据库  目前未使用
 void CInfoDialog::OnInitADOConn()
 {
 	//if(!AfxOleInit())//这就是初始化COM库
@@ -219,6 +228,7 @@ void CInfoDialog::OnInitADOConn()
 	//}
 }
 
+// 退出连接 目前未使用
 void CInfoDialog::ExitConnect()
 {
 	//关闭记录集和连接
@@ -231,6 +241,7 @@ void CInfoDialog::ExitConnect()
 	//CoUninitialize();	//退出com库
 }
 
+// 该函数执行 在列表中 填充数据  
 void CInfoDialog::AddToList()
 {
 	//连接数据库
@@ -468,6 +479,7 @@ void CInfoDialog::AddToList()
 
 }
 
+// 关闭窗口 执行函数
 void CInfoDialog::OnCancel()
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -477,9 +489,12 @@ void CInfoDialog::OnCancel()
 	ExitConnect();
 }
 
+// 点击列表 执行函数  把选择行的信息 更新到 窗口各关联区域
 void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	// TODO: Add your control notification handler code here
+
+	// 获取当前选择行
 	int mark = m_list.GetSelectionMark();
 	if(mark<0) 
 		return;
@@ -539,12 +554,13 @@ void CInfoDialog::OnClickList(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
+// 添加信息 函数  执行添加按钮响应
 void CInfoDialog::OnAddData()
 {	
 	//用于将屏幕上控件中的数据交换到变量中
 	UpdateData(TRUE);
 
-
+	//获取编辑框信息  并检测不能为空的编辑框信息
 	getEditText();
 	if(moduleNum.IsEmpty() || slotNum.IsEmpty() || boardName.IsEmpty() || info.IsEmpty())
 	{
@@ -567,11 +583,12 @@ void CInfoDialog::OnAddData()
 		//	m_stuYear,m_stuMonth);
 		/*sql.Format(_T("insert into main(dataID,moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"),+ m_containValue +",'"+moduleNum+"','"+slotNum+"',"+boardName+",'"+portNum+"',"+timeSlot+",\
 																																																												  "+deviceNum+","+portType+","+info+"')");*/
+		// 把数据增加进 数据库中
 		sql.Format(_T("insert into %s(moduleNum,slotNum,boardName,portNum,timeSlot,deviceNum,portType,info)values( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s')"), m_listName, imoduleNum, islotNum, boardName, portNum, timeSlot, deviceNum, portType, info);
 		theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		MessageBox(_T("录入成功."),_T("提示"));
 
-		//按模块、槽位、端口号和描述信息升序排序
+		//重新取出数据库中数据  按模块、槽位、端口号和描述信息升序排序
 		sql.Format(_T("select * from %s order by %s.moduleNum,%s.slotNum,%s.portNum,%s.info asc"), m_inquerySQL, m_listName, m_listName, m_listName, m_listName);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
 		DisplayInfo();
@@ -582,6 +599,7 @@ void CInfoDialog::OnAddData()
 	}
 }
 
+// 修改数据 函数  响应修改按键
 void CInfoDialog::OnModifyData()
 {	
 	//用于将屏幕上控件中的数据交换到变量中
@@ -605,6 +623,7 @@ void CInfoDialog::OnModifyData()
 		return;
 	}
 
+	// 获取当前需要选择的信息  在数据库中添加的ID值  检测是否存在此条数据
 	CString sql;
 	sql.Format(_T("select * from main where dataID = %d"),idataID);
 	theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
@@ -617,6 +636,7 @@ void CInfoDialog::OnModifyData()
 
 	if(AfxMessageBox(_T("确定修改?"),MB_YESNO)==IDYES)
 	{
+		//更新数据库中指定的数据
 		sql.Format(_T("update %s set moduleNum = %d,slotNum = %d,boardName = '%s',portNum = '%s',timeSlot = '%s',deviceNum = '%s',portType = '%s',info = '%s' where dataID = %d"), m_listName, imoduleNum, islotNum, boardName, portNum, timeSlot, deviceNum, portType, info, idataID);
 		try
 		{
@@ -632,6 +652,7 @@ void CInfoDialog::OnModifyData()
 	UpdataList(0,0);
 }
 
+// 删除数据库 按键响应函数
 void CInfoDialog::OnDeleteData()
 {
 	// TODO: Add your control notification handler code here
@@ -644,6 +665,7 @@ void CInfoDialog::OnDeleteData()
 	}
 	try
 	{
+		// 根据当前选择数据的ID值 判断数据库中是否存在当前数据 若存在则执行删除
 		CString sql;
 		sql.Format(_T("select * from %s where dataID = %d"), m_listName,idataID);
 		theApp.m_pRecordset = theApp.m_pConnection->Execute((_bstr_t)sql,NULL,adCmdText);
@@ -668,6 +690,7 @@ void CInfoDialog::OnDeleteData()
 	}
 }
 
+// 清楚按键 响应函数
 void CInfoDialog::OnClearData()
 {
 	dataID.Empty();
@@ -698,6 +721,7 @@ void CInfoDialog::OnClearData()
 	UpdateData(FALSE);
 }
 
+// 重新把数据加载进 列表中
 void CInfoDialog::DisplayInfo()
 {
 	m_list.DeleteAllItems();
@@ -900,6 +924,7 @@ void CInfoDialog::DisplayInfo()
 	}
 }
 
+// 获取编辑框中的数据 并赋值到 相对应变量 中
 void CInfoDialog::getEditText()
 {
 	/*m_modNum.GetWindowText(moduleNum);
@@ -921,6 +946,7 @@ void CInfoDialog::getEditText()
 	m_info.GetWindowText(info);		
 }
 
+// 重新充数据库中 读取数据
 LRESULT CInfoDialog::UpdataList(WPARAM wParam,LPARAM lParam)
 {
 	//按模块、槽位、端口号和描述信息升序排序
@@ -931,6 +957,7 @@ LRESULT CInfoDialog::UpdataList(WPARAM wParam,LPARAM lParam)
 	return 1L;
 }
 
+// 设置需要访问数据的信息  如 需要访问的 表名
 void CInfoDialog::onSetDatabase(CString listName, CString modN, int mod, int bMod)
 {
 	//设置表单名字 & 需要查询模块号

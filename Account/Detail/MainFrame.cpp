@@ -32,7 +32,7 @@ void CMainFrame::OnFinalRelease()
 	CFrameWnd::OnFinalRelease();
 }
 
-
+// 消息映射
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_NOTIFY(NM_DBLCLK, 100, OnDblclkTree)
@@ -59,7 +59,7 @@ END_INTERFACE_MAP()
 
 // CMainFrame message handlers
 
-
+// 框架创建函数  加载信息
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
@@ -72,6 +72,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 1L;
 }
 
+// 加载控制 响应函数
 void CMainFrame::LoadControl()
 {
 
@@ -146,7 +147,7 @@ void CMainFrame::LoadControl()
 	imageList->Add(AfxGetApp()->LoadIcon(IDI_TREE_CHILD2));
 
 	m_wndTree.SetImageList(imageList,TVSIL_NORMAL);
-	//往树型控件添加内容以及图标
+	//往树型控件添加内容以及图标  和树控件 子节点
 	HTREEITEM hti = m_wndTree.InsertItem(_T("兰新高铁网管台帐"),1,1);
 	HTREEITEM hti2=m_wndTree.InsertItem(_T("兰新高铁主用主系统"),0,3,hti);
 	/*if(theApp.m_status!=_T("普通用户"))
@@ -214,6 +215,7 @@ void CMainFrame::LoadControl()
 	m_pLeft->UpdateWindow(); //更新LeftControl
 }
 
+// 加载 系统默认框架   不用管
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParentWnd , CCreateContext* pContext)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -221,7 +223,7 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParen
 	return CFrameWnd::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 }
 
-
+//当框架创建时调用  此部分 把页面分为两个区域   树控件区域 和 列表控件区域
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -251,6 +253,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	return CFrameWnd::OnCreateClient(lpcs, pContext);
 }
 
+// 在树控件中 双击树节点  响应函数
 int pos=-100;	//用以控制对话框位置移动的变量
 void CMainFrame::OnDblclkTree(NMHDR* pNMHDR, LRESULT* pResult)		//树型控件的双击事件
 {
@@ -375,10 +378,13 @@ void CMainFrame::OnDestroy()
 
 	//CoUninitialize();	//退出com库
 }
+
+// 当是 管理模式登陆时  创建新用户 函数
 void CMainFrame::OnAddUser()
 {
 	if (theApp.m_userID)
 	{
+		// 弹出创建新用户对话框
 		CUserDialog userDlg;
 		userDlg.m_bIsAddUser = true;
 		if(IDOK==userDlg.DoModal()) // 登录对话框
@@ -396,10 +402,12 @@ void CMainFrame::OnAddUser()
 	}
 
 }
+// 当是 管理模式登陆时  修改密码 函数
 void CMainFrame::OnChangePassword()
 {
 	if (theApp.m_userID)
 	{
+		// 弹出修改密码 对话框
 		CUserDialog userDlg;
 		userDlg.m_bIsAddUser = false;
 		if(IDOK==userDlg.DoModal()) // 登录对话框

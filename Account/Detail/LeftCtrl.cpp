@@ -32,7 +32,7 @@ static CPen _pen3DLight(PS_SOLID,1,GetSysColor(COLOR_3DLIGHT));
 static CPen _pen3DShadow(PS_SOLID,1,GetSysColor(COLOR_3DSHADOW));
 static CPen _pen3DDKShadow(PS_SOLID,1,GetSysColor(COLOR_3DDKSHADOW));
 
-
+//树控件 初始化参数
 CLeftCtrl::CLeftCtrl()
 {
 	m_nStyle = TCS_DOWN;
@@ -40,7 +40,7 @@ CLeftCtrl::CLeftCtrl()
 	m_nBorder = 1;
 	m_bEraseBkgnd = TRUE;
 }
-
+// 树控件析构函数 窗口销毁时 删除对应数据
 CLeftCtrl::~CLeftCtrl()
 {
 	POSITION pos;
@@ -62,7 +62,7 @@ CLeftCtrl::~CLeftCtrl()
 	m_PageList.RemoveAll();
 }
 
-
+// 消息映射  按键响应 改变窗口大小 信息响应
 BEGIN_MESSAGE_MAP(CLeftCtrl, CWnd)
 	//{{AFX_MSG_MAP(CLeftCtrl)
 	ON_WM_PAINT()
@@ -79,7 +79,7 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CLeftCtrl message handlers
-
+// 创建函数   当窗口刚创建时执行
 BOOL CLeftCtrl::Create(UINT wStyle, const CRect &rect, CWnd *pParentWnd, UINT nID)
 {
 	m_nStyle = wStyle & TCS_MASK;
@@ -98,6 +98,7 @@ BOOL CLeftCtrl::Create(UINT wStyle, const CRect &rect, CWnd *pParentWnd, UINT nI
 	return FALSE;
 }
 
+// 修改背景 当窗口重绘 或是显示之前时执行
 BOOL CLeftCtrl::OnEraseBkgnd(CDC* pDC) 
 {
 	if(m_bEraseBkgnd)
@@ -110,7 +111,7 @@ BOOL CLeftCtrl::OnEraseBkgnd(CDC* pDC)
 	}
 	return TRUE;
 }
-
+// 窗口 绘制函数  窗口显示 重绘时执行
 void CLeftCtrl::OnPaint() 
 {
 	CPaintDC	dc(this);
@@ -137,7 +138,7 @@ void CLeftCtrl::OnPaint()
 	dc.SelectObject(pOldPen);
 }
 
-
+// 添加 页面  目前只存在一个页面  可多添加
 CLeftCtrl::CPageItem* CLeftCtrl::AddPage(CWnd *pWnd, LPCTSTR sText, UINT IconID)
 {
 	ASSERT(pWnd);
@@ -168,6 +169,7 @@ CLeftCtrl::CPageItem* CLeftCtrl::AddPage(CWnd *pWnd, LPCTSTR sText, UINT IconID)
 	return pItem;
 }
 
+// 添加 页面  目前只存在一个页面  可多添加
 BOOL CLeftCtrl::AddPage(CRuntimeClass* pClass,UINT nIDTemplate, LPCTSTR sText, UINT IconID)
 {
 	CDialog *pDlg = (CDialog*)pClass->CreateObject();
@@ -187,7 +189,7 @@ BOOL CLeftCtrl::AddPage(CRuntimeClass* pClass,UINT nIDTemplate, LPCTSTR sText, U
 	return FALSE;
 }
 
-
+// 获取子窗口区域
 void CLeftCtrl::GetClientRect(LPRECT lpRect)
 {
 	CWnd::GetClientRect(lpRect);
@@ -216,6 +218,7 @@ UINT CLeftCtrl::CPageItem::GetAreaWidth(CDC *pDC)
 	return width + 9;
 }
 
+//绘制函数  子模块绘制 重画时调用
 void CLeftCtrl::CPageItem::Draw(CDC *pDC, UINT nStyle, BOOL bActive)
 {
 	CRect rect = m_rect;
@@ -402,6 +405,7 @@ void CLeftCtrl::SetActivePage(int nIndex)
 		pItem->m_pWnd->ShowWindow(SW_SHOW);
 }
 
+// 获取当前选择页面
 void* CLeftCtrl::GetPageItem(UINT nIndex)
 {
 	CPageItem *pItem = NULL;
@@ -411,6 +415,7 @@ void* CLeftCtrl::GetPageItem(UINT nIndex)
 	return pItem;
 }
 
+// 重绘 更新 窗口函数
 void CLeftCtrl::UpdateWindow()
 {
  	AutoSize();
@@ -421,6 +426,7 @@ void CLeftCtrl::UpdateWindow()
  	Invalidate();
 }
 
+// 当鼠标左键 按下时  执行此函数
 void CLeftCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
 {
 	UINT nItemIndex=0;
@@ -449,6 +455,7 @@ void CLeftCtrl::OnSizing(UINT fwSide, LPRECT pRect)
 	AutoSize();
 }
 
+// 重绘当前指定大小  当拉扯窗口 改变大小时执行
 void CLeftCtrl::OnSize(UINT nType, int cx, int cy) 
 {
 	CWnd::OnSize(nType, cx, cy);
@@ -487,6 +494,7 @@ UINT CLeftCtrl::GetStyle()
 	return m_nStyle;
 }
 
+// 定制器 函数
 void CLeftCtrl::OnTimer(UINT nIDEvent) 
 {
 	static	int step,times = 10;

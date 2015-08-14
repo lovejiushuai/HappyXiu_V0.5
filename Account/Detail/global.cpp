@@ -14,10 +14,11 @@ CWinApp * __stdcall afxGetApp(void)
 	return &theApp;
 }
 
-
+//启动 dll入口
 // DLL CONTRUCT
 int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 {
+	// 获取当前 App    和 句柄 
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	*ppDllApp = afxGetApp();
 
@@ -28,11 +29,12 @@ int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 
 	theApp.m_hAccount = m_hAccount;
 
+	// 创建 框架 并 保存
 	CMainFrame* pFrame = new CMainFrame;
 	theApp.m_pMainWnd = pFrame;
 
 
-
+	// 加载 框架  设置显示
 	// create and load the frame with its resources
 
 	pFrame->LoadFrame(IDR_MAINFRAME,
@@ -69,6 +71,8 @@ int WINAPI StartDll(HWND AppHwnd,HINSTANCE &m_hAccount,CWinApp **ppDllApp)
 
 	return 1;
 }
+
+//设置 管理模式 函数
 int WINAPI SetAdmin(int userID)
 {
 	int tempAdmin;
@@ -86,6 +90,7 @@ int WINAPI SetAdmin(int userID)
 	return 1;
 }
 
+// 获取当前路径
 void getAppCurDir(TCHAR *curDir)
 {
 	TCHAR szPath[MAX_PATH];
@@ -104,6 +109,7 @@ void getAppCurDir(TCHAR *curDir)
 	wsprintf(curDir,_T("%s"),szPath);
 }
 
+// 打印 日志 函数  用来调试  现在未使用未开放
 int LogtoFile(const TCHAR *pszFormat, ...)
 {
 	return 0;

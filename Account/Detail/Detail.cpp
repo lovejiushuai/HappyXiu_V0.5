@@ -63,7 +63,7 @@ BOOL CDetailApp::InitInstance()
 {
 	CWinApp::InitInstance();
 
-	//读取注册表是否是管理员
+	//读取注册表是否是管理员  目前未使用  不用管
 	CString str;
 	str.Empty();
 	GetProfileString(_T("login"),_T("Admin"),str);
